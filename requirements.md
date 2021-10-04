@@ -21,11 +21,12 @@ Start button that starts a game that the user can experience. The users will be 
 - Adding animated image to mini-game
 - Lightbox effect for user initials/highscore inputs
 - 8 bit version of Team Logo during start of web application
+- Game List
 
 # Functional Requirements
+- Game List(Snake)
 - Mini-Games have to work
 - Highscore inputs must save to LocalStorage
 - Navigation links must work on each page,no 404 errors
-
 # Data Flow
 The web application will start on the landing page. The user will launch the game by pressing the start button and when the game is over the user will have an opportunity to input their initials to the highscores and the data will be added to their LocalStorage. When the user navigates to the highscore page it will load the scores from LocalStorage. 
