@@ -21,7 +21,7 @@ Start button that starts a game that the user can experience. The users will be 
 - Adding animated image to mini-game
 - Lightbox effect for user initials/highscore inputs
 - 8 bit version of Team Logo during start of web application
-- Game List
+- Game List(Astroids, Lander, BreakOut, Hangman, Tic-Tac-Toe, )
 
 # Functional Requirements
 - Game List(Snake)
