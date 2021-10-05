@@ -11,6 +11,7 @@ function GameObject(context, x, y, vx, vy) {
   this.y = y;
   this.vx = vx;
   this.vy = vy;
+  this.collision = false;
 }
 
 
