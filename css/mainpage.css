@@ -3,13 +3,14 @@ navbar {
     grid-template-columns: 300px 500px 500px 500px 300px;
     grid-template-rows: 130px;;
     color: tomato;
+    background-image: url("/img/black-space-with-lot-stars-2469662.jpg");
 }
 
 img#navimg {
     grid-column-start: 1;
     grid-column-end: 3;
     grid-row-start: 1;
-
+    
     width: 200px;
     height: 150px;
 }
@@ -22,7 +23,7 @@ div.Home {
     text-align:center;
     margin-top: 50px;
     margin-inline: 10px;
-
+    
     font-size: 50px;
 }
 
@@ -32,7 +33,7 @@ div.Score {
     grid-row: 1;
     text-align: center;
     margin-top: 50px;
-
+    
     font-size: 50px;
 }
 
@@ -42,7 +43,7 @@ div.About {
     grid-row: 1;
     text-align: center;
     margin-top: 50px;
-
+    
     font-size: 50px;
 }
 
@@ -64,14 +65,9 @@ div.buttoncontainer {
     grid-column-end: 3;
     grid-row-start: 3;
     grid-row-end: 4;
-
+    
 }
 
-button {
-    background-color: crimson;
-    width: 1000px;
-    height:300px
-}
 
 canvas#snake {
     grid-column-start: 2;
@@ -86,4 +82,12 @@ canvas#snake {
 body {
     background-image: url("/img/abstract.jpg");
     background-color: #cccccc;
+}
+
+button {
+    background-color: crimson;
+    width: 650px;
+    height:400px;
+    
+    transition: ease-out;
 }
