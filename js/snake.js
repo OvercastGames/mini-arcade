@@ -5,8 +5,7 @@ let snakeGame = new Game(canvas, ctx);
 
 window.addEventListener('keydown', handleKeyPress);
 
-let squareSize = canvas.width / 15;
-
+let squareSize = 40;
 
 const timeout = 1000 / 6;
 
@@ -27,7 +26,7 @@ function SnakeSegment(context, x, y, vx, vy, height, width, color) {
 
 SnakeSegment.add = function() {
   new SnakeSegment(ctx, 0, 0, 0, 0, squareSize, squareSize, 'green');
-}
+};
 
 SnakeSegment.all = [];
 
@@ -71,7 +70,11 @@ function SnakeFood(context, x, y, vx, vy, height, width, color) {
 }
 
 SnakeFood.prototype.draw = function () {
-  this.context.fillStyle = this.color;
+  if(this.collision){
+    this.context.fillStyle = 'yellow';
+  } else {
+    this.context.fillStyle = this.color;
+  }
   this.context.fillRect(this.x, this.y, this.height, this.width);
 };
 
@@ -85,6 +88,62 @@ SnakeFood.prototype.findSafeLocation = function () {
 
 SnakeFood.all = [];
 
+function drawGameBoard() {
+  for(let rows = 0; rows < 11; rows++) {
+    for(let columns = 0; columns < 15; columns++) {
+      if((isOdd(rows) && isEven(columns)) || ((isEven(rows) && isOdd(columns)))) {
+        ctx.fillStyle = 'purple';
+      } else {
+        ctx.fillStyle = 'orange';
+      }
+      ctx.beginPath();
+      ctx.fillRect(columns * 40, rows * 40, 40, 40);
+    }
+  }
+}
+
+function checkCollisions() {
+  // Food collisions
+  let a;
+  let b;
+
+  for(let i = 0; i < SnakeSegment.all.length; i++) {
+    SnakeSegment.all[i].collision = false;
+  }
+
+  for(let i = 0; i < SnakeFood.all.length; i++) {
+    SnakeFood.all[i].collision = false;
+  }
+
+  let head = SnakeSegment.all[0];
+
+  let foodHead = SnakeFood.all[0];
+
+  if(rectIntersect(head.x, head.y, head.width, head.height, foodHead.x, foodHead.y, foodHead.width, foodHead.height)) {
+    head.collision = true;
+    foodHead.collision = true;
+  }
+
+  for(let i = 0; i < SnakeSegment.all.length; i++) {
+    a = SnakeSegment.all[i];
+    for(let j = + 1; j < SnakeSegment.all.length; j++) {
+      b = SnakeSegment.all[i];
+    } if(rectIntersect(a.x, a.y, a.width, a.height, b.x, b.y, b.width, b.height)) {
+      a.collision = true;
+      b.collision = true;
+    }
+  }
+}
+
+// Collision detection logic taken from tutorial AT https://spicyyoghurt.com/tutorials/html5-javascript-game-development/collision-detection-physics
+function rectIntersect(ax, ay, aWidth, aHeight, bx, by, bWidth, bHeight) {
+  if(bx > aWidth + ax || ax > bWidth + bx || by > aHeight + ay || ay > bHeight + by) {
+    console.log('hi');
+    return false;
+  }
+  return true;
+}
+
 function handleKeyPress(event) {
 
   for(let i = 0; i < allowedKeys.length; i++) {
@@ -92,7 +151,6 @@ function handleKeyPress(event) {
       activeKey = event.key.toLowerCase();
     }
   }
-  console.log(activeKey);
 }
 
 function updateAll() {
@@ -111,6 +169,7 @@ function updateAll() {
 }
 
 function drawAll() {
+  drawGameBoard();
   // function that draws all the things
   for(let i = 0; i < SnakeSegment.all.length; i++) {
     SnakeSegment.all[i].draw();
@@ -132,10 +191,18 @@ function gameLoop() {
 }
 
 
-new SnakeSegment(ctx, 50, 50, 0, 0, squareSize, squareSize, 'green');
-new SnakeSegment(ctx, 50, 50, 0, 0, squareSize, squareSize, 'green');
-new SnakeSegment(ctx, 50, 50, 0, 0, squareSize, squareSize, 'green');
-new SnakeSegment(ctx, 50, 50, 0, 0, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, squareSize, squareSize, 0, 1, squareSize, squareSize, 'green');
 
 new SnakeFood(ctx, 100, 100, 0, 0, 10, 10, 'red');
 
