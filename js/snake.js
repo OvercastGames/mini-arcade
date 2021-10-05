@@ -5,6 +5,9 @@ let snakeGame = new Game(canvas, ctx);
 
 window.addEventListener('keydown', handleKeyPress);
 
+let squareSize = canvas.width / 15;
+
+
 const timeout = 1000 / 6;
 
 let activeKey = '';
@@ -20,6 +23,10 @@ function SnakeSegment(context, x, y, vx, vy, height, width, color) {
   this.width = width;
   this.color = color;
   SnakeSegment.all.push(this);
+}
+
+SnakeSegment.add = function() {
+  new SnakeSegment(ctx, 0, 0, 0, 0, squareSize, squareSize, 'green');
 }
 
 SnakeSegment.all = [];
@@ -64,7 +71,8 @@ function SnakeFood(context, x, y, vx, vy, height, width, color) {
 }
 
 SnakeFood.prototype.draw = function () {
-
+  this.context.fillStyle = this.color;
+  this.context.fillRect(this.x, this.y, this.height, this.width);
 };
 
 SnakeFood.prototype.update = function () {
@@ -93,6 +101,12 @@ function updateAll() {
     SnakeSegment.all[i].x = SnakeSegment.all[i - 1].x;
     SnakeSegment.all[i].y = SnakeSegment.all[i - 1].y;
   }
+  for(let i = 0; i < SnakeFood.all.length; i++) {
+    SnakeFood.all[i].findSafeLocation();
+    if(SnakeFood.all[i].collision) {
+      SnakeFood[i].all.findSafeLocation();
+    }
+  }
   SnakeSegment.all[0].update();
 }
 
@@ -101,29 +115,29 @@ function drawAll() {
   for(let i = 0; i < SnakeSegment.all.length; i++) {
     SnakeSegment.all[i].draw();
   }
+  for(let i = 0; i < SnakeFood.all.length; i++) {
+    SnakeFood.all[i].draw();
+  }
 }
 
 function gameLoop() {
   // Function that does all the updating (snake update food update)
-  // Looping backwards through snakesegments and not including the head = [0]
-  
-  
+  updateAll();
   // Function to clear screen
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  // Looping backwards through snakesegments and not including the head = [0]
+  drawAll();
   setTimeout(gameLoop, timeout);
   // Check for collisions (walls food self)
 }
 
 
-new SnakeSegment(ctx, 50, 50, 0, 0, 20, 20, 'green');
-new SnakeSegment(ctx, 100, 100, 0, 0, 20, 20, 'green');
-new SnakeSegment(ctx, 50, 50, 0, 0, 20, 20, 'green');
-new SnakeSegment(ctx, 100, 100, 0, 0, 20, 20, 'green');
-new SnakeSegment(ctx, 50, 50, 0, 0, 20, 20, 'green');
-new SnakeSegment(ctx, 100, 100, 0, 0, 20, 20, 'green');
-new SnakeSegment(ctx, 50, 50, 0, 0, 20, 20, 'green');
-new SnakeSegment(ctx, 100, 100, 0, 0, 20, 20, 'green');
+new SnakeSegment(ctx, 50, 50, 0, 0, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, 50, 50, 0, 0, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, 50, 50, 0, 0, squareSize, squareSize, 'green');
+new SnakeSegment(ctx, 50, 50, 0, 0, squareSize, squareSize, 'green');
+
+new SnakeFood(ctx, 100, 100, 0, 0, 10, 10, 'red');
 
 gameLoop();
 
