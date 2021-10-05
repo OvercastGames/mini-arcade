@@ -1,7 +1,10 @@
 navbar {
     display: grid;
-    grid-template-columns: auto auto auto auto;
-    grid-template-rows: 130px;
+    grid-template-columns: 300px 500px 500px 500px 300px;
+    grid-template-rows: 130px;;
+
+    text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 0.2em yellow;
+    color:yellow;
 }
 
 img#navimg {

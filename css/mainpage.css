@@ -1,0 +1,93 @@
+navbar {
+    display: grid;
+    grid-template-columns: 300px 500px 500px 500px 300px;
+    grid-template-rows: 130px;;
+    color: tomato;
+    background-image: url("/img/black-space-with-lot-stars-2469662.jpg");
+}
+
+img#navimg {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    
+    width: 200px;
+    height: 150px;
+}
+
+div.Home {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    text-align:center;
+    margin-top: 50px;
+    margin-inline: 10px;
+    
+    font-size: 50px;
+}
+
+div.Score {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row: 1;
+    text-align: center;
+    margin-top: 50px;
+    
+    font-size: 50px;
+}
+
+div.About {
+    grid-column-start: 4;
+    grid-column-end: 5;
+    grid-row: 1;
+    text-align: center;
+    margin-top: 50px;
+    
+    font-size: 50px;
+}
+
+a {
+    color: tomato;
+    text-decoration: none;
+}
+
+main {
+    display:grid;
+    grid-template-columns: 300px 1500px 300px;
+    grid-template-rows: 200px 250px 250px 250px 200px;
+    filter: blur();
+    text-align: center;
+}
+
+div.buttoncontainer {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    grid-row-end: 4;
+    
+}
+
+
+canvas#snake {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    grid-row-end:  4;
+    position:relative;
+    left: 465px;
+    bottom:55px
+}
+
+body {
+    background-image: url("/img/abstract.jpg");
+    background-color: #cccccc;
+}
+
+button {
+    background-color: crimson;
+    width: 650px;
+    height:400px;
+    
+    transition: ease-out;
+}
