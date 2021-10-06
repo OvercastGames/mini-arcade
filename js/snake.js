@@ -1,52 +1,100 @@
-let canvas = document.getElementById('snake');
-let ctx = canvas.getContext('2d');
 
-let snakeGame = new Game(canvas, ctx);
 
-window.addEventListener('keydown', handleKeyPress);
 
-let squareSize = 40;
-let snakeSegmentSize = 36;
-let numColumns = 15;
-let numRows = 11;
 
-const timeout = 1000 / 6;
+snakeGame.handleKeyPress = function (event) {
+  for (let i = 0; i < snakeGame.allowedKeys.length; i++) {
+    if (event.key.toLowerCase() === snakeGame.allowedKeys[i]) {
+      snakeGame.activeKey = event.key.toLowerCase();
+    }
+  }
+};
 
-let activeKey = '';
+window.addEventListener('keydown', snakeGame.handleKeyPress);
 
-let allowedKeys = ['w', 'a', 's', 'd', 'q', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
+snakeGame.setData = function () {
 
-snakeGame.canvas.width = 600;
-snakeGame.canvas.height = 450;
+
+  snakeGame.allSegments = [];
+  snakeGame.squareSize = 40;
+  snakeGame.snakeSegmentSize = 36;
+  snakeGame.numRows = 11;
+  snakeGame.numColumns = 15;
+  snakeGame.canvas.width = 600;
+  snakeGame.canvas.height = 450;
+  snakeGame.timeout = 1000 / 6;
+  snakeGame.activeKey = '';
+  snakeGame.allowedKeys = ['w', 'a', 's', 'd', 'q', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
+  snakeGame.allFood = [];
+};
+
+
+snakeGame.newGame = function () {
+  snakeGame.allSegments = [];
+  new SnakeSegment(snakeCtx, snakeGame.squareSize * 4, snakeGame.squareSize * 6, 1, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeSegment(snakeCtx, snakeGame.squareSize * 3, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeSegment(snakeCtx, snakeGame.squareSize * 2, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeFood(snakeCtx, 100, 100, 0, 0, 25, 25, 'red');
+  gameLoop();
+};
+
+snakeGame.continueGame = function () {
+  setTimeout(gameLoop, snakeGame.timeout);
+};
+
+function gameLoop() {
+  // Function that does all the updating (snake update food update)
+  //console.log(snakeGame.allSegments[0].x, snakeGame.allSegments[0].y);
+  updateAll();
+  checkCollisions();
+  // Function to clear screen
+  snakeCtx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
+  // Looping backwards through snakesegments and not including the head = [0]
+  drawAll();
+  if (snakeGame.activeKey !== 'q') {
+    setTimeout(gameLoop, snakeGame.timeout);
+  }
+  //if (snakeGame.activeKey === 'p') {
+  //setTimeout(gameLoop, snakeGame.timeout);
+  //}
+
+  //snakeGame.showIntro();
+  // Check for collisions (walls food self)
+}
+
+snakeGame.showIntro = function () {
+  snakeCtx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
+  //draw text
+};
+
+
 
 function SnakeSegment(context, x, y, vx, vy, height, width, color) {
   GameObject.call(this, context, x, y, vx, vy);
   this.height = height;
   this.width = width;
   this.color = color;
-  SnakeSegment.all.push(this);
+  snakeGame.allSegments.push(this);
 }
 
 SnakeSegment.prototype.add = function () {
   if (this.vx === 0 && this.vy > 0) {
-    new SnakeSegment(this.context, this.x, this.y - squareSize, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+    new SnakeSegment(this.context, this.x, this.y - snakeGame.squareSize, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
   }
   if (this.vx === 0 && this.vy < 0) {
-    new SnakeSegment(this.context, this.x, this.y + squareSize, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+    new SnakeSegment(this.context, this.x, this.y + snakeGame.squareSize, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
   }
   if (this.vy === 0 && this.vx > 0) {
-    new SnakeSegment(this.context, this.x - squareSize, this.y, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+    new SnakeSegment(this.context, this.x - snakeGame.squareSize, this.y, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
   }
   if (this.vy === 0 && this.vx < 0) {
-    new SnakeSegment(this.context, this.x + squareSize, this.y, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+    new SnakeSegment(this.context, this.x + snakeGame.squareSize, this.y, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
   }
 };
 
-SnakeSegment.all = [];
-
 SnakeSegment.prototype.draw = function () {
   // How a snake segment is shown on the screen
-  let padding = (squareSize - this.width) / 2;
+  let padding = (snakeGame.squareSize - this.width) / 2;
   if (this.collision) {
     this.context.fillStyle = 'yellow';
   } else {
@@ -58,26 +106,26 @@ SnakeSegment.prototype.draw = function () {
 
 SnakeSegment.prototype.update = function () {
   // Will let us take each snake segment and change its x and y coordinates change its properties
-  if (activeKey === 'a' || activeKey === 'arrowleft') {
+  if (snakeGame.activeKey === 'a' || snakeGame.activeKey === 'arrowleft') {
     if (this.vx !== 1) {
 
       this.vx = -1;
       this.vy = 0;
     }
   }
-  if (activeKey === 'd' || activeKey === 'arrowright') {
+  if (snakeGame.activeKey === 'd' || snakeGame.activeKey === 'arrowright') {
     if (this.vx !== -1) {
       this.vy = 0;
       this.vx = 1;
     }
   }
-  if (activeKey === 'w' || activeKey === 'arrowup') {
+  if (snakeGame.activeKey === 'w' || snakeGame.activeKey === 'arrowup') {
     if (this.vy !== 1) {
       this.vy = -1;
       this.vx = 0;
     }
   }
-  if (activeKey === 's' || activeKey === 'arrowdown') {
+  if (snakeGame.activeKey === 's' || snakeGame.activeKey === 'arrowdown') {
     if (this.vy !== -1) {
       this.vy = 1;
       this.vx = 0;
@@ -85,8 +133,8 @@ SnakeSegment.prototype.update = function () {
   }
   // this.x = 50 this.y = 50
   // if right key pressed we can see we can see vy = 0 and vx = 1
-  this.x += this.vx * squareSize;
-  this.y += this.vy * squareSize;
+  this.x += this.vx * snakeGame.squareSize;
+  this.y += this.vy * snakeGame.squareSize;
 };
 
 function SnakeFood(context, x, y, vx, vy, height, width, color) {
@@ -94,12 +142,12 @@ function SnakeFood(context, x, y, vx, vy, height, width, color) {
   this.height = height;
   this.width = width;
   this.color = color;
-  SnakeFood.all.push(this);
+  snakeGame.allFood.push(this);
   this.findSafeLocation();
 }
 
 SnakeFood.prototype.draw = function () {
-  let padding = (squareSize - this.width) / 2;
+  let padding = (snakeGame.squareSize - this.width) / 2;
   if (this.collision) {
     this.context.fillStyle = 'orange';
   } else {
@@ -120,20 +168,19 @@ SnakeFood.prototype.findSafeLocation = function () {
   let randomX;
   let randomY;
   do {
-    randomX = Math.floor(Math.random() * numColumns) * squareSize;
-    randomY = Math.floor(Math.random() * numRows) * squareSize;
-  } while (isOccupied(randomX * squareSize, randomY * squareSize));
+    randomX = Math.floor(Math.random() * snakeGame.numColumns) * snakeGame.squareSize;
+    randomY = Math.floor(Math.random() * snakeGame.numRows) * snakeGame.squareSize;
+  } while (isOccupied(randomX * snakeGame.squareSize, randomY * snakeGame.squareSize));
   this.x = randomX;
   this.y = randomY;
 
 };
 
-SnakeFood.all = [];
 
 function isOccupied(x, y) {
-  for (let i = 0; i < SnakeSegment.all.length; i++) {
-    let current = SnakeSegment.all[i];
-    if (rectIntersect(current.x, current.y, current.width, current.height, x, y, squareSize, squareSize)) {
+  for (let i = 0; i < snakeGame.allSegments.length; i++) {
+    let current = snakeGame.allSegments[i];
+    if (rectIntersect(current.x, current.y, current.width, current.height, x, y, snakeGame.squareSize, snakeGame.squareSize)) {
       return true;
     }
   }
@@ -141,17 +188,17 @@ function isOccupied(x, y) {
 }
 
 function drawGameBoard() {
-  for (let rows = 0; rows < numRows; rows++) {
-    for (let columns = 0; columns < numColumns; columns++) {
+  for (let rows = 0; rows < snakeGame.numRows; rows++) {
+    for (let columns = 0; columns < snakeGame.numColumns; columns++) {
       if ((isOdd(rows) && isEven(columns)) || ((isEven(rows) && isOdd(columns)))) {
-        ctx.fillStyle = '#c0eb5d';
-        //ctx.fillStyle = '#4168AB';
+        snakeCtx.fillStyle = '#c0eb5d';
+        //snakeCtx.fillStyle = '#4168AB';
       } else {
-        ctx.fillStyle = '#ccef7d';
-        //ctx.fillStyle = '#3D4B75';
+        snakeCtx.fillStyle = '#ccef7d';
+        //snakeCtx.fillStyle = '#3D4B75';
       }
-      ctx.beginPath();
-      ctx.fillRect(columns * 40, rows * 40, 40, 40);
+      snakeCtx.beginPath();
+      snakeCtx.fillRect(columns * 40, rows * 40, 40, 40);
     }
   }
 }
@@ -161,35 +208,34 @@ function checkCollisions() {
   let a;
   let b;
 
-  for (let i = 0; i < SnakeSegment.all.length; i++) {
-    SnakeSegment.all[i].collision = false;
+  for (let i = 0; i < snakeGame.allSegments.length; i++) {
+    snakeGame.allSegments[i].collision = false;
   }
 
-  for (let i = 0; i < SnakeFood.all.length; i++) {
-    SnakeFood.all[i].collision = false;
+  for (let i = 0; i < snakeGame.allFood.length; i++) {
+    snakeGame.allFood[i].collision = false;
   }
 
-  let head = SnakeSegment.all[0];
-  let foodHead = SnakeFood.all[0];
+  let head = snakeGame.allSegments[0];
+  let foodHead = snakeGame.allFood[0];
 
   if (rectIntersect(head.x, head.y, head.width, head.height, foodHead.x, foodHead.y, foodHead.width, foodHead.height)) {
     head.collision = true;
     foodHead.collision = true;
   }
-  if (head.x < 0 || head.x + squareSize > snakeGame.canvas.width || head.y < 0 || head.y + squareSize > snakeGame.canvas.height) {
-    console.log('you lose');
+  // outside game board
+  if (head.x < 0 || head.x + snakeGame.squareSize > snakeGame.canvas.width || head.y < 0 || head.y + snakeGame.squareSize > snakeGame.canvas.height) {
   }
   // Add new segment
   if (foodHead.collision) {
-    SnakeSegment.all[SnakeSegment.all.length - 1].add();
+    snakeGame.allSegments[snakeGame.allSegments.length - 1].add();
   }
 
-  for (let i = 0; i < SnakeSegment.all.length; i++) {
-    a = SnakeSegment.all[i];
-    for (let j = i + 1; j < SnakeSegment.all.length; j++) {
-      b = SnakeSegment.all[j];
+  for (let i = 0; i < snakeGame.allSegments.length; i++) {
+    a = snakeGame.allSegments[i];
+    for (let j = i + 1; j < snakeGame.allSegments.length; j++) {
+      b = snakeGame.allSegments[j];
       if (rectIntersect(a.x, a.y, a.width, a.height, b.x, b.y, b.width, b.height)) {
-        console.log('you lose');
         a.collision = true;
         b.collision = true;
       }
@@ -205,70 +251,31 @@ function rectIntersect(ax, ay, aWidth, aHeight, bx, by, bWidth, bHeight) {
   return true;
 }
 
-function handleKeyPress(event) {
-  for (let i = 0; i < allowedKeys.length; i++) {
-    if (event.key.toLowerCase() === allowedKeys[i]) {
-      activeKey = event.key.toLowerCase();
-    }
-  }
-}
 
 function updateAll() {
-  for (let i = SnakeSegment.all.length - 1; i > 0; i--) {
+  for (let i = snakeGame.allSegments.length - 1; i > 0; i--) {
     // If snakesegment.all[10] then === snakesegment.all[9]
-    SnakeSegment.all[i].x = SnakeSegment.all[i - 1].x;
-    SnakeSegment.all[i].y = SnakeSegment.all[i - 1].y;
-    SnakeSegment.all[i].vy = SnakeSegment.all[i - 1].vy;
-    SnakeSegment.all[i].vx = SnakeSegment.all[i - 1].vx;
+    snakeGame.allSegments[i].x = snakeGame.allSegments[i - 1].x;
+    snakeGame.allSegments[i].y = snakeGame.allSegments[i - 1].y;
+    snakeGame.allSegments[i].vy = snakeGame.allSegments[i - 1].vy;
+    snakeGame.allSegments[i].vx = snakeGame.allSegments[i - 1].vx;
   }
-  for (let i = 0; i < SnakeFood.all.length; i++) {
-    SnakeFood.all[i].update();
+  for (let i = 0; i < snakeGame.allFood.length; i++) {
+    snakeGame.allFood[i].update();
   }
-  SnakeSegment.all[0].update();
+  snakeGame.allSegments[0].update();
 }
 
 function drawAll() {
   drawGameBoard();
   // function that draws all the things
-  for (let i = 0; i < SnakeSegment.all.length; i++) {
-    SnakeSegment.all[i].draw();
+  for (let i = 0; i < snakeGame.allSegments.length; i++) {
+    snakeGame.allSegments[i].draw();
   }
-  for (let i = 0; i < SnakeFood.all.length; i++) {
-    SnakeFood.all[i].draw();
+  for (let i = 0; i < snakeGame.allFood.length; i++) {
+    snakeGame.allFood[i].draw();
   }
 }
-function wallCheck() {
-  //wall check
-}
-function gameLoop() {
-  // Function that does all the updating (snake update food update)
-  updateAll();
-  checkCollisions();
-
-  // Function to clear screen
-  ctx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
-  // Looping backwards through snakesegments and not including the head = [0]
-  drawAll();
-  if (activeKey !== 'q') {
-    setTimeout(gameLoop, timeout);
-  }
-  console.log('game over');
-  // Check for collisions (walls food self)
-}
-
-function init() {
-  SnakeSegment.all = [];
-  new SnakeSegment(ctx, squareSize * 6, squareSize * 6, 1, 0, snakeSegmentSize, snakeSegmentSize, 'green');
-  new SnakeSegment(ctx, squareSize * 5, squareSize * 6, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
-  new SnakeSegment(ctx, squareSize * 4, squareSize * 6, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
-  new SnakeFood(ctx, 100, 100, 0, 0, 25, 25, 'red');
-  gameLoop();
-}
-
-init();
-
-
-
 
 
 
