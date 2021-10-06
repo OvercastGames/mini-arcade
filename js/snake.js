@@ -14,7 +14,7 @@ const timeout = 1000 / 6;
 
 let activeKey = '';
 
-let allowedKeys = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
+let allowedKeys = ['w', 'a', 's', 'd', 'q', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
 
 snakeGame.canvas.width = 600;
 snakeGame.canvas.height = 450;
@@ -249,7 +249,10 @@ function gameLoop() {
   ctx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
   // Looping backwards through snakesegments and not including the head = [0]
   drawAll();
-  setTimeout(gameLoop, timeout);
+  if (activeKey !== 'q') {
+    setTimeout(gameLoop, timeout);
+  }
+  console.log('game over');
   // Check for collisions (walls food self)
 }
 
