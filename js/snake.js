@@ -6,7 +6,9 @@ let snakeGame = new Game(canvas, ctx);
 window.addEventListener('keydown', handleKeyPress);
 
 let squareSize = 40;
-let snakeSegmentSize = 36;
+let snakeSegmentSize = 34;
+let numColumns = 15;
+let numRows = 11;
 
 const timeout = 1000 / 6;
 
@@ -22,12 +24,11 @@ function SnakeSegment(context, x, y, vx, vy, height, width, color) {
   this.height = height;
   this.width = width;
   this.color = color;
-  this.speed = squareSize;
   SnakeSegment.all.push(this);
 }
 
-SnakeSegment.add = function () {
-  new SnakeSegment(ctx, 0, 0, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+SnakeSegment.prototype.add = function () {
+  new SnakeSegment(this.context, this.x, this.y, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
 };
 
 SnakeSegment.all = [];
@@ -40,7 +41,7 @@ SnakeSegment.prototype.draw = function () {
   } else {
     this.context.fillStyle = 'green';
   }
-  this.context.fillRect(this.x + padding, this.y + padding, this.height, this.width);
+  this.context.fillRect(this.x, this.y, this.height, this.width);
 
 };
 
@@ -77,8 +78,9 @@ function SnakeFood(context, x, y, vx, vy, height, width, color) {
 }
 
 SnakeFood.prototype.draw = function () {
+  let padding = (squareSize - this.width) / 2;
   if (this.collision) {
-    this.context.fillStyle = 'yellow';
+    this.context.fillStyle = 'orange';
   } else {
     this.context.fillStyle = 'red';
   }
@@ -86,18 +88,28 @@ SnakeFood.prototype.draw = function () {
 };
 
 SnakeFood.prototype.update = function () {
-
+  if (this.collision) {
+    this.findSafeLocation();
+  }
 };
 
 SnakeFood.prototype.findSafeLocation = function () {
+  let randomX;
+  let randomY;
+  do {
+    randomX = Math.floor(Math.random() * numColumns) * squareSize;
+    randomY = Math.floor(Math.random() * numRows) * squareSize;
+  } while ((randomX > 0 && randomX < canvas.width || randomY > 0 && randomY < canvas.height));
+  this.x = randomX;
+  this.y = randomY;
 
 };
 
 SnakeFood.all = [];
 
 function drawGameBoard() {
-  for (let rows = 0; rows < 11; rows++) {
-    for (let columns = 0; columns < 15; columns++) {
+  for (let rows = 0; rows < numRows; rows++) {
+    for (let columns = 0; columns < numColumns; columns++) {
       if ((isOdd(rows) && isEven(columns)) || ((isEven(rows) && isOdd(columns)))) {
         ctx.fillStyle = 'purple';
       } else {
@@ -131,7 +143,7 @@ function checkCollisions() {
   }
 
   if (foodHead.collision) {
-    SnakeSegment.add();
+    SnakeSegment.all[SnakeSegment.all.length - 1].add();
   }
 
   for (let i = 0; i < SnakeSegment.all.length; i++) {
@@ -148,7 +160,6 @@ function checkCollisions() {
 // Collision detection logic taken from tutorial AT https://spicyyoghurt.com/tutorials/html5-javascript-game-development/collision-detection-physics
 function rectIntersect(ax, ay, aWidth, aHeight, bx, by, bWidth, bHeight) {
   if (bx > aWidth + ax || ax > bWidth + bx || by > aHeight + ay || ay > bHeight + by) {
-    console.log('hi');
     return false;
   }
   return true;
@@ -170,12 +181,11 @@ function updateAll() {
     SnakeSegment.all[i].y = SnakeSegment.all[i - 1].y;
   }
   for (let i = 0; i < SnakeFood.all.length; i++) {
-    SnakeFood.all[i].findSafeLocation();
-    if (SnakeFood.all[i].collision) {
-      SnakeFood.all[i].findSafeLocation();
-    }
+    SnakeFood.all[i].update();
+    console.log(SnakeFood.all[i].collision);
   }
   SnakeSegment.all[0].update();
+  //SnakeSegment.all[SnakeSegment.all.length - 1].update();
 }
 
 function drawAll() {
@@ -191,8 +201,8 @@ function drawAll() {
 
 function gameLoop() {
   // Function that does all the updating (snake update food update)
-  checkCollisions();
   updateAll();
+  checkCollisions();
   // Function to clear screen
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // Looping backwards through snakesegments and not including the head = [0]
