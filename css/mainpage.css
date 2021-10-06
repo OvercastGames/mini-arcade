@@ -65,8 +65,8 @@ canvas#snake, canvas#menu {
     grid-row-start: 3;
     grid-row-end:  4;
     position:relative;
-    left: 370px;
-    bottom: 15px;
+    left: 425px;
+    bottom: -48px;
     z-index: -1;
 }
 
@@ -75,15 +75,6 @@ body {
     background-color: #cccccc;
 }
 
-button {
-    background-color: red;
-    width: 650px;
-    height:400px;
-    font-size: 80px;
-    font-style: oblique;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    border-style:outset;
-}
 #cabinetimage {
     position: relative;
     left: 440px;
