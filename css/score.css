@@ -1,6 +1,7 @@
 
 footer {
     text-align: center;
+    font-size: 30px;
 }
 
 section {
@@ -15,7 +16,7 @@ section {
     margin-left: 10px;
     text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 0.2em yellow;
     color:#ccff15;
-
+    background-color: rgba(0,0,0, 0.8);
    
 }
 
@@ -50,7 +51,9 @@ div#score {
     grid-column-start: 5;
     grid-column-end: 7;
 }
-
+#score-ol {
+    list-style: none; 
+}
 div#initials {
     grid-column-start: 2;
 

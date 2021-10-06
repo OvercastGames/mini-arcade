@@ -11,10 +11,15 @@ main {
     grid-template-columns: 600px 1500px;
     grid-template-rows: 420px 420px 420px 420px 200px;
     gap: 50px;
+    position: relative;
+    left: 398px;
 }
 
 navbar {
     background-image: url("/img/black-space-with-lot-stars-2469662.jpg");
+}
+body {
+    background-image: url('/img/retro-tile-background.jpg');
 }
 
 img#Kirk {
@@ -47,11 +52,15 @@ footer {
     text-align: center;
     padding: 50px;
     height: 10px;
+    color: white;
+    position: relative;
+    right: 160px;
 }
 
 div.container1 {
     top: 120px;
     animation: KirkGlow 1.5s infinite alternate;
+    width: 600px;
 }
 
 @keyframes KirkGlow {
@@ -63,6 +72,7 @@ div.container1 {
 div.container2 {
     top: 120px;
     animation: BenGlow 1.5s infinite alternate;
+    width: 600px;
 }
 
 @keyframes BenGlow {
@@ -74,6 +84,7 @@ div.container2 {
 div.container3 {
     top: 120px;
     animation: KevinGlow 1.5s infinite alternate;
+    width: 600px;
 }
 
 @keyframes KevinGlow {
@@ -85,6 +96,7 @@ div.container3 {
 div.container4 {
     top: 120px;
     animation: JustinGlow 1.5s infinite alternate;
+    width: 600px;
 }
 
 @keyframes JustinGlow {
@@ -96,6 +108,22 @@ div.container4 {
 div {
     margin: 10px;
 }
+
+main {
+    width: 1400px;
+    border: 1.5px;
+    border-style: dashed;
+    border-color: aliceblue;
+}
+
+.centered{
+    position:absolute;
+    left:7.5vw;
+    top:5.25vh;
+    transform:translateX(-50%) translateY(-50%) rotateX(15deg);
+    text-align:center;
+    
+  }
 
 
 /* animation: glow2 1.5s infinite alternate;

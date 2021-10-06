@@ -13,7 +13,48 @@
 <body>
     <header>
 		<navbar>
-            <img id="navimg" src="./img/miniarcadelogo.png">
+            <div class="centered">
+				<div class="neon">Mini Arcade</div>
+			</div>
+			<svg>
+				<defs>
+					<filter id="stroke">
+						<feMorphology operator="dilate" radius="1" in="SourceGraphic" result="outside" />
+						<feMorphology operator="dilate" radius="2" in="outside" result="thickened" />
+						<feComposite operator="out" in2="SourceGraphic" in="thickened" result="stroke" />
+
+					</filter>
+
+					<filter id="inner-glow">
+						<feFlood flood-color="#e10b8d" />
+						<feComposite in2="SourceAlpha" operator="out" />
+						<feGaussianBlur stdDeviation="0.5" result="blur" />
+						<feComposite operator="atop" in2="SourceGraphic" />
+
+					</filter>
+
+					<filter id="outer-glow">
+						<feMorphology operator="dilate" radius="2" in="SourceAlpha" result="thicken" />
+						<feGaussianBlur in="thicken" stdDeviation="5" result="blurred" />
+						<feFlood flood-color="#db0273" result="glowColor" />
+						<feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
+						<feMerge>
+							<feMergeNode in="softGlow_colored" />
+							<feMergeNode in="SourceGraphic" />
+						</feMerge>
+					</filter>
+					<filter id="outer-glow1">
+						<feMorphology operator="dilate" radius="20" in="SourceAlpha" result="thicken" />
+						<feGaussianBlur in="thicken" stdDeviation="25" result="blurred" />
+						<feFlood flood-color="#530139" result="glowColor" />
+						<feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
+						<feMerge>
+							<feMergeNode in="softGlow_colored" />
+							<feMergeNode in="SourceGraphic" />
+						</feMerge>
+					</filter>
+				</defs>
+			</svg>
                         <div class="Home"><a href="./index.html">Home</a></div>
                         <div class="About"><a href="./about.html">About</a></div>
                     <div class="Score"><a href="./score.html">Score</a></div>
@@ -21,30 +62,36 @@
 	</header>
 
 	<main>
-            <img id="Kirk" src="img/Profile pic.jpeg" height="400" width="300">
+
+            <img id="Kirk" src="img/kirk-72dpi-crop-square.jpg">
+
             <div class="container1">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
         
-            <img id="Ben" src="img/me-small.jpg">
+            <img id="Ben" src="img/ben-72dpi-crop-square.jpg">
+
             <div class="container2">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
 
-            <img id="Kevin" src="img/LinkedInPrfile.jpg" height="400" width="300">
+            <img id="Kevin" src="img/kevin-72dpi-crop-square.jpg">
+
             <div class="container3">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
 
-            <img id="Justin" src="img/Justin_Selfie.jpg" height="400" width="300">
+            <img id="Justin" src="img/justin-72dpi-crop-square.jpg">
+
             <div class="container4">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
 		
-        <footer>
-            <p>&copy;2021 Overcast Games</p>
-        </footer>
+       
 	</main>
+    <footer>
+        <p>&copy;2021 Overcast Games</p>
+    </footer>
 
 </body>
 </html>
