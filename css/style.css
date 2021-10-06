@@ -6,6 +6,7 @@ navbar {
     text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 0.3em yellow;
     color:yellow;
     height: 140px;
+
     margin-top: 35px;
 }
 .centered{
@@ -16,8 +17,6 @@ navbar {
     text-align:center;
     
   }
-  
-  
   .neon{
     font-family:'Neon 80s';
     font-size:4rem;
@@ -25,6 +24,8 @@ navbar {
     padding:30px;
     filter:url(#stroke) url(#inner-glow) url(#outer-glow) url(#outer-glow1);
   }
+}
+
 
 div.About:hover {
     text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 5em yellow;
