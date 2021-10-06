@@ -59,20 +59,15 @@ main {
     text-align: center;
 }
 
-canvas#snake {
+canvas#snake, canvas#menu {
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 3;
     grid-row-end:  4;
     position:relative;
-    left: 370px;
-    bottom: 15px;
+    left: 425px;
+    bottom: -48px;
     z-index: -1;
-    border: black;
-    border-style: solid;
-    border-width: 65px;
-    
-    
 }
 
 body {
@@ -80,15 +75,6 @@ body {
     background-color: #cccccc;
 }
 
-button {
-    background-color: red;
-    width: 650px;
-    height:400px;
-    font-size: 80px;
-    font-style: oblique;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    border-style:outset;
-}
 #cabinetimage {
     position: relative;
     left: 440px;
