@@ -1,9 +1,9 @@
+
+
 let canvas = document.getElementById('snake');
 let ctx = canvas.getContext('2d');
-
 let snakeGame = new Game(canvas, ctx);
 
-window.addEventListener('keydown', handleKeyPress);
 
 let squareSize = 40;
 let snakeSegmentSize = 36;
@@ -14,7 +14,7 @@ const timeout = 1000 / 6;
 
 let activeKey = '';
 
-let allowedKeys = ['w', 'a', 's', 'd', 'q', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
+let allowedKeys = ['w', 'a', 's', 'd', 'q', 'n', 'm', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
 
 snakeGame.canvas.width = 600;
 snakeGame.canvas.height = 450;
@@ -177,7 +177,6 @@ function checkCollisions() {
     foodHead.collision = true;
   }
   if (head.x < 0 || head.x + squareSize > snakeGame.canvas.width || head.y < 0 || head.y + squareSize > snakeGame.canvas.height) {
-    console.log('you lose');
   }
   // Add new segment
   if (foodHead.collision) {
@@ -189,7 +188,6 @@ function checkCollisions() {
     for (let j = i + 1; j < SnakeSegment.all.length; j++) {
       b = SnakeSegment.all[j];
       if (rectIntersect(a.x, a.y, a.width, a.height, b.x, b.y, b.width, b.height)) {
-        console.log('you lose');
         a.collision = true;
         b.collision = true;
       }
@@ -205,13 +203,7 @@ function rectIntersect(ax, ay, aWidth, aHeight, bx, by, bWidth, bHeight) {
   return true;
 }
 
-function handleKeyPress(event) {
-  for (let i = 0; i < allowedKeys.length; i++) {
-    if (event.key.toLowerCase() === allowedKeys[i]) {
-      activeKey = event.key.toLowerCase();
-    }
-  }
-}
+
 
 function updateAll() {
   for (let i = SnakeSegment.all.length - 1; i > 0; i--) {
@@ -241,6 +233,7 @@ function wallCheck() {
   //wall check
 }
 function gameLoop() {
+  console.log('snake is running');
   // Function that does all the updating (snake update food update)
   updateAll();
   checkCollisions();
@@ -251,21 +244,21 @@ function gameLoop() {
   drawAll();
   if (activeKey !== 'q') {
     setTimeout(gameLoop, timeout);
+  } else if (activeKey === 'n') {
+    init();
   }
-  console.log('game over');
   // Check for collisions (walls food self)
 }
 
-function init() {
+let init = function () {
+  state = 'notStart';
   SnakeSegment.all = [];
   new SnakeSegment(ctx, squareSize * 6, squareSize * 6, 1, 0, snakeSegmentSize, snakeSegmentSize, 'green');
   new SnakeSegment(ctx, squareSize * 5, squareSize * 6, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
   new SnakeSegment(ctx, squareSize * 4, squareSize * 6, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
   new SnakeFood(ctx, 100, 100, 0, 0, 25, 25, 'red');
   gameLoop();
-}
-
-init();
+};
 
 
 

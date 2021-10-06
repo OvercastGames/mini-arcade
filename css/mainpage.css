@@ -92,3 +92,7 @@ button {
     
     transition: ease-out;
 }
+
+#start {
+  background-color: transparent;
+}
