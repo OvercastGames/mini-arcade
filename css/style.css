@@ -3,8 +3,21 @@ navbar {
     grid-template-columns: 300px 500px 500px 500px 300px;
     grid-template-rows: 130px;;
 
-    text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 0.2em yellow;
+    text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 0.3em yellow;
     color:yellow;
+    height: 140px;
+}
+
+div.About:hover {
+    text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 5em yellow;
+}
+
+div.Score:hover {
+    text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 5em yellow;
+}
+
+div.Home:hover {
+    text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 5em yellow;
 }
 
 img#navimg {

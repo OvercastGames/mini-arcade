@@ -56,7 +56,6 @@ main {
     display:grid;
     grid-template-columns: 300px 1500px 300px;
     grid-template-rows: 200px 250px 250px 250px 200px;
-    filter: blur();
     text-align: center;
 }
 
@@ -85,9 +84,11 @@ body {
 }
 
 button {
-    background-color: crimson;
+    background-color: red;
     width: 650px;
     height:400px;
-    
-    transition: ease-out;
+    font-size: 80px;
+    font-style: oblique;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    border-style:outset;
 }

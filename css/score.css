@@ -4,6 +4,7 @@ footer {
 }
 
 section {
+    width: 2100px;
     display: grid;
     grid-template-columns: 200px 300px 400px 300px 400px 300px 200px;
     grid-template-rows: 450px;
@@ -23,11 +24,26 @@ h1 {
     color:#ccff15;
     text-align: center;
     font-size: 50px;
+
+    animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+    to {
+        text-shadow: 0 5px 15px yellow;
+    }
 }
 
 h2 {
     font-size: 50px;
     border-style: solid;
+    animation: glow2 1.5s infinite alternate;
+}
+
+@keyframes glow2 {
+    to {
+        text-shadow: 0 5px 15px yellow;
+    }
 }
 
 div#score {
@@ -48,6 +64,7 @@ body {
     background-image: url("/img/Collage.jpg");
     background-size: 100%;
     background-repeat: no-repeat;
+    width: 1900px;
 }
 
 footer {
