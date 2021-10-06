@@ -3,108 +3,109 @@
 
 <head>
 
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-	<link rel="stylesheet" href="reset.css">
-	<link rel="stylesheet" href="css/mainpage.css">
-	<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="css/mainpage.css">
+  <link rel="stylesheet" href="css/style.css">
 
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-		<link rel="stylesheet" href="reset.css">
-		<link rel="stylesheet" href="css/mainpage.css">
-		<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="css/mainpage.css">
+  <link rel="stylesheet" href="css/style.css">
 
 </head>
 
 <body>
-	<header>
-		<navbar>
-			<div class="centered">
-				<div class="neon">Mini Arcade</div>
-			</div>
-			<svg>
-				<defs>
-					<filter id="stroke">
-						<feMorphology operator="dilate" radius="1" in="SourceGraphic" result="outside" />
-						<feMorphology operator="dilate" radius="2" in="outside" result="thickened" />
-						<feComposite operator="out" in2="SourceGraphic" in="thickened" result="stroke" />
+  <header>
+    <navbar>
+      <div class="centered">
+        <div class="neon">Mini Arcade</div>
+      </div>
+      <svg>
+        <defs>
+          <filter id="stroke">
+            <feMorphology operator="dilate" radius="1" in="SourceGraphic" result="outside" />
+            <feMorphology operator="dilate" radius="2" in="outside" result="thickened" />
+            <feComposite operator="out" in2="SourceGraphic" in="thickened" result="stroke" />
 
-					</filter>
+          </filter>
 
-					<filter id="inner-glow">
-						<feFlood flood-color="#e10b8d" />
-						<feComposite in2="SourceAlpha" operator="out" />
-						<feGaussianBlur stdDeviation="0.5" result="blur" />
-						<feComposite operator="atop" in2="SourceGraphic" />
+          <filter id="inner-glow">
+            <feFlood flood-color="#e10b8d" />
+            <feComposite in2="SourceAlpha" operator="out" />
+            <feGaussianBlur stdDeviation="0.5" result="blur" />
+            <feComposite operator="atop" in2="SourceGraphic" />
 
-					</filter>
+          </filter>
 
-					<filter id="outer-glow">
-						<!-- Thicken out the original shape -->
-						<feMorphology operator="dilate" radius="2" in="SourceAlpha" result="thicken" />
+          <filter id="outer-glow">
+            <!-- Thicken out the original shape -->
+            <feMorphology operator="dilate" radius="2" in="SourceAlpha" result="thicken" />
 
-						<!-- Use a gaussian blur to create the soft blurriness of the glow -->
-						<feGaussianBlur in="thicken" stdDeviation="5" result="blurred" />
+            <!-- Use a gaussian blur to create the soft blurriness of the glow -->
+            <feGaussianBlur in="thicken" stdDeviation="5" result="blurred" />
 
-						<!-- Change the colour -->
-						<feFlood flood-color="#db0273" result="glowColor" />
+            <!-- Change the colour -->
+            <feFlood flood-color="#db0273" result="glowColor" />
 
-						<!-- Color in the glows -->
-						<feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
+            <!-- Color in the glows -->
+            <feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
 
-						<!--	Layer the effects together -->
-						<feMerge>
-							<feMergeNode in="softGlow_colored" />
-							<feMergeNode in="SourceGraphic" />
-						</feMerge>
+            <!--	Layer the effects together -->
+            <feMerge>
+              <feMergeNode in="softGlow_colored" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
 
-					</filter>
+          </filter>
 
-					<filter id="outer-glow1">
-						<!-- Thicken out the original shape -->
-						<feMorphology operator="dilate" radius="20" in="SourceAlpha" result="thicken" />
+          <filter id="outer-glow1">
+            <!-- Thicken out the original shape -->
+            <feMorphology operator="dilate" radius="20" in="SourceAlpha" result="thicken" />
 
-						<!-- Use a gaussian blur to create the soft blurriness of the glow -->
-						<feGaussianBlur in="thicken" stdDeviation="25" result="blurred" />
+            <!-- Use a gaussian blur to create the soft blurriness of the glow -->
+            <feGaussianBlur in="thicken" stdDeviation="25" result="blurred" />
 
-						<!-- Change the colour -->
-						<feFlood flood-color="#530139" result="glowColor" />
+            <!-- Change the colour -->
+            <feFlood flood-color="#530139" result="glowColor" />
 
-						<!-- Color in the glows -->
-						<feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
+            <!-- Color in the glows -->
+            <feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
 
-						<!--	Layer the effects together -->
-						<feMerge>
-							<feMergeNode in="softGlow_colored" />
-							<feMergeNode in="SourceGraphic" />
-						</feMerge>
+            <!--	Layer the effects together -->
+            <feMerge>
+              <feMergeNode in="softGlow_colored" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
 
-					</filter>
-				</defs>
-			</svg>
-			<div class="Home"><a href="./index.html">Home</a></div>
-			<div class="About"><a href="./about.html">About</a></div>
-			<div class="Score"><a href="./score.html">Score</a></div>
-		</navbar>
-	</header>
+          </filter>
+        </defs>
+      </svg>
+      <div class="Home"><a href="./index.html">Home</a></div>
+      <div class="About"><a href="./about.html">About</a></div>
+      <div class="Score"><a href="./score.html">Score</a></div>
+    </navbar>
+  </header>
 
-	<main>
-		<div><img id="cabinetimage" src="/img/cabinet-sm.png" alt="" height="2200px" width="1150px"></div>
-		<div id='cabinetBackground'></div>
+  <main>
+    <div><img id="cabinetimage" src="/img/cabinet-sm.png" alt="" height="2200px" width="1150px"></div>
+    <div id='cabinetBackground'></div>
 
-		<canvas id="snake"></canvas>
-	</main>
+    <canvas id="menu"></canvas>
+    <canvas id="snake"></canvas>
+  </main>
 
-	<footer>
-		<p>&copy;2021 Overcast Games</p>
-	</footer>
-	<script src="./js/app.js"></script>
-	<script src="./js/snake.js"></script>
+  <footer>
+    <p>&copy;2021 Overcast Games</p>
+  </footer>
+  <script src="./js/app.js"></script>
+  <script src="./js/snake.js"></script>
 
 </body>
 
