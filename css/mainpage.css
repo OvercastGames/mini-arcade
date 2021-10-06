@@ -80,7 +80,8 @@ canvas#snake {
 }
 
 body {
-    background-image: url("/img/abstract.jpg");
+    background-image: url("/img/retro-tile-background.jpg");
+    /*background-image: url("/img/abstract.jpg");*/
     background-color: #cccccc;
 }
 
