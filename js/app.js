@@ -15,16 +15,14 @@ function GameObject(context, x, y, vx, vy) {
 }
 
 function isOdd(num) {
-  if(num % 2 !== 0) {
+  if (num % 2 !== 0) {
     return true;
   }
   return false;
 }
 
-
-
 function isEven(num) {
-  if(num % 2 === 0) {
+  if (num % 2 === 0) {
     return true;
   }
   return false;

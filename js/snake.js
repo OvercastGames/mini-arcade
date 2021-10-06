@@ -7,6 +7,8 @@ window.addEventListener('keydown', handleKeyPress);
 
 let squareSize = 40;
 let snakeSegmentSize = 36;
+let numColumns = 15;
+let numRows = 11;
 
 const timeout = 1000 / 6;
 
@@ -22,12 +24,22 @@ function SnakeSegment(context, x, y, vx, vy, height, width, color) {
   this.height = height;
   this.width = width;
   this.color = color;
-  this.speed = squareSize;
   SnakeSegment.all.push(this);
 }
 
-SnakeSegment.add = function () {
-  new SnakeSegment(ctx, 0, 0, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+SnakeSegment.prototype.add = function () {
+  if (this.vx === 0 && this.vy > 0) {
+    new SnakeSegment(this.context, this.x, this.y - squareSize, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+  }
+  if (this.vx === 0 && this.vy < 0) {
+    new SnakeSegment(this.context, this.x, this.y + squareSize, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+  }
+  if (this.vy === 0 && this.vx > 0) {
+    new SnakeSegment(this.context, this.x - squareSize, this.y, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+  }
+  if (this.vy === 0 && this.vx < 0) {
+    new SnakeSegment(this.context, this.x + squareSize, this.y, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+  }
 };
 
 SnakeSegment.all = [];
@@ -40,27 +52,36 @@ SnakeSegment.prototype.draw = function () {
   } else {
     this.context.fillStyle = 'green';
   }
-  this.context.fillRect(this.x + padding, this.y + padding, this.height, this.width);
+  this.context.fillRect(this.x, this.y, this.height, this.width);
 
 };
 
 SnakeSegment.prototype.update = function () {
   // Will let us take each snake segment and change its x and y coordinates change its properties
   if (activeKey === 'a' || activeKey === 'arrowleft') {
-    this.vy = 0;
-    this.vx = -1;
+    if (this.vx !== 1) {
+
+      this.vx = -1;
+      this.vy = 0;
+    }
   }
   if (activeKey === 'd' || activeKey === 'arrowright') {
-    this.vy = 0;
-    this.vx = 1;
+    if (this.vx !== -1) {
+      this.vy = 0;
+      this.vx = 1;
+    }
   }
   if (activeKey === 'w' || activeKey === 'arrowup') {
-    this.vy = -1;
-    this.vx = 0;
+    if (this.vy !== 1) {
+      this.vy = -1;
+      this.vx = 0;
+    }
   }
   if (activeKey === 's' || activeKey === 'arrowdown') {
-    this.vy = 1;
-    this.vx = 0;
+    if (this.vy !== -1) {
+      this.vy = 1;
+      this.vx = 0;
+    }
   }
   // this.x = 50 this.y = 50
   // if right key pressed we can see we can see vy = 0 and vx = 1
@@ -74,11 +95,13 @@ function SnakeFood(context, x, y, vx, vy, height, width, color) {
   this.width = width;
   this.color = color;
   SnakeFood.all.push(this);
+  this.findSafeLocation();
 }
 
 SnakeFood.prototype.draw = function () {
+  let padding = (squareSize - this.width) / 2;
   if (this.collision) {
-    this.context.fillStyle = 'yellow';
+    this.context.fillStyle = 'orange';
   } else {
     this.context.fillStyle = 'red';
   }
@@ -86,22 +109,46 @@ SnakeFood.prototype.draw = function () {
 };
 
 SnakeFood.prototype.update = function () {
-
+  if (this.collision) {
+    this.findSafeLocation();
+  }
 };
 
+
+
 SnakeFood.prototype.findSafeLocation = function () {
+  let randomX;
+  let randomY;
+  do {
+    randomX = Math.floor(Math.random() * numColumns) * squareSize;
+    randomY = Math.floor(Math.random() * numRows) * squareSize;
+  } while (isOccupied(randomX * squareSize, randomY * squareSize));
+  this.x = randomX;
+  this.y = randomY;
 
 };
 
 SnakeFood.all = [];
 
+function isOccupied(x, y) {
+  for (let i = 0; i < SnakeSegment.all.length; i++) {
+    let current = SnakeSegment.all[i];
+    if (rectIntersect(current.x, current.y, current.width, current.height, x, y, squareSize, squareSize)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function drawGameBoard() {
-  for (let rows = 0; rows < 11; rows++) {
-    for (let columns = 0; columns < 15; columns++) {
+  for (let rows = 0; rows < numRows; rows++) {
+    for (let columns = 0; columns < numColumns; columns++) {
       if ((isOdd(rows) && isEven(columns)) || ((isEven(rows) && isOdd(columns)))) {
-        ctx.fillStyle = 'purple';
+        ctx.fillStyle = '#c0eb5d';
+        //ctx.fillStyle = '#4168AB';
       } else {
-        ctx.fillStyle = 'orange';
+        ctx.fillStyle = '#ccef7d';
+        //ctx.fillStyle = '#3D4B75';
       }
       ctx.beginPath();
       ctx.fillRect(columns * 40, rows * 40, 40, 40);
@@ -129,18 +176,23 @@ function checkCollisions() {
     head.collision = true;
     foodHead.collision = true;
   }
-
+  if (head.x < 0 || head.x + squareSize > snakeGame.canvas.width || head.y < 0 || head.y + squareSize > snakeGame.canvas.height) {
+    console.log('you lose');
+  }
+  // Add new segment
   if (foodHead.collision) {
-    SnakeSegment.add();
+    SnakeSegment.all[SnakeSegment.all.length - 1].add();
   }
 
   for (let i = 0; i < SnakeSegment.all.length; i++) {
     a = SnakeSegment.all[i];
     for (let j = i + 1; j < SnakeSegment.all.length; j++) {
       b = SnakeSegment.all[j];
-    } if (rectIntersect(a.x, a.y, a.width, a.height, b.x, b.y, b.width, b.height)) {
-      a.collision = true;
-      b.collision = true;
+      if (rectIntersect(a.x, a.y, a.width, a.height, b.x, b.y, b.width, b.height)) {
+        console.log('you lose');
+        a.collision = true;
+        b.collision = true;
+      }
     }
   }
 }
@@ -148,14 +200,12 @@ function checkCollisions() {
 // Collision detection logic taken from tutorial AT https://spicyyoghurt.com/tutorials/html5-javascript-game-development/collision-detection-physics
 function rectIntersect(ax, ay, aWidth, aHeight, bx, by, bWidth, bHeight) {
   if (bx > aWidth + ax || ax > bWidth + bx || by > aHeight + ay || ay > bHeight + by) {
-    console.log('hi');
     return false;
   }
   return true;
 }
 
 function handleKeyPress(event) {
-
   for (let i = 0; i < allowedKeys.length; i++) {
     if (event.key.toLowerCase() === allowedKeys[i]) {
       activeKey = event.key.toLowerCase();
@@ -168,12 +218,11 @@ function updateAll() {
     // If snakesegment.all[10] then === snakesegment.all[9]
     SnakeSegment.all[i].x = SnakeSegment.all[i - 1].x;
     SnakeSegment.all[i].y = SnakeSegment.all[i - 1].y;
+    SnakeSegment.all[i].vy = SnakeSegment.all[i - 1].vy;
+    SnakeSegment.all[i].vx = SnakeSegment.all[i - 1].vx;
   }
   for (let i = 0; i < SnakeFood.all.length; i++) {
-    SnakeFood.all[i].findSafeLocation();
-    if (SnakeFood.all[i].collision) {
-      SnakeFood.all[i].findSafeLocation();
-    }
+    SnakeFood.all[i].update();
   }
   SnakeSegment.all[0].update();
 }
@@ -188,27 +237,35 @@ function drawAll() {
     SnakeFood.all[i].draw();
   }
 }
-
+function wallCheck() {
+  //wall check
+}
 function gameLoop() {
   // Function that does all the updating (snake update food update)
-  checkCollisions();
   updateAll();
+  checkCollisions();
+
   // Function to clear screen
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
   // Looping backwards through snakesegments and not including the head = [0]
   drawAll();
   setTimeout(gameLoop, timeout);
   // Check for collisions (walls food self)
 }
 
+function init() {
+  SnakeSegment.all = [];
+  new SnakeSegment(ctx, squareSize * 6, squareSize * 6, 1, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+  new SnakeSegment(ctx, squareSize * 5, squareSize * 6, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+  new SnakeSegment(ctx, squareSize * 4, squareSize * 6, 0, 0, snakeSegmentSize, snakeSegmentSize, 'green');
+  new SnakeFood(ctx, 100, 100, 0, 0, 25, 25, 'red');
+  gameLoop();
+}
 
-new SnakeSegment(ctx, squareSize, squareSize, 0, 1, snakeSegmentSize, snakeSegmentSize, 'green');
-new SnakeSegment(ctx, squareSize, squareSize, 0, 1, snakeSegmentSize, snakeSegmentSize, 'green');
-new SnakeSegment(ctx, squareSize, squareSize, 0, 1, snakeSegmentSize, snakeSegmentSize, 'green');
+init();
 
 
 
-new SnakeFood(ctx, 100, 100, 0, 0, 10, 10, 'red');
 
-gameLoop();
+
 
