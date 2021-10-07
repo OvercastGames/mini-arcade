@@ -57,20 +57,22 @@ div#score {
     grid-column-start: 5;
     grid-column-end: auto;
 }
+
 #score-ol {
     list-style: none; 
     position: relative;
     right: 22px;
 }
+
 div#initials {
     grid-column-start: 2;
-
 }
 
 li {
     font-size: 40px;
     margin: 10px;
 }
+
 body {
     background-image: url("/img/Collage.jpg");
     background-size: 100%;
@@ -96,6 +98,7 @@ section {
     left: 250px;
     width: 70vw;
 }
+
 main {
     width: 70vw;
 }
@@ -104,4 +107,3 @@ main {
     position: relative;
     left: 280px;
 }
-
