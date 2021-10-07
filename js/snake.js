@@ -22,6 +22,7 @@ snakeGame.setData = function () {
   snakeGame.segmentColor = 'linear-gradient(#74f330, #000000)';
   snakeGame.foodColor = 'red';
   snakeGame.scoreDisplayBuffer = 0;
+  snakeGame.muted = false;
 };
 
 snakeGame.newGame = function () {
@@ -282,6 +283,10 @@ function drawAll() {
   }
 
   if (snakeGame.allFood[0].collision) {
+    if (!snakeGame.muted) {
+      let sound = new Audio('../audio/pickup.wav');
+      sound.play();
+    }
     snakeGame.scoreDisplayBuffer = 1;
     drawScoreToScreen();
   } else if (snakeGame.scoreDisplayBuffer > 0 && snakeGame.scoreDisplayBuffer < 4) {
