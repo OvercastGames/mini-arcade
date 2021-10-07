@@ -1,20 +1,15 @@
-
-
-
-
-snakeGame.handleKeyPress = function (event) {
-  for (let i = 0; i < snakeGame.allowedKeys.length; i++) {
-    if (event.key.toLowerCase() === snakeGame.allowedKeys[i]) {
-      snakeGame.activeKey = event.key.toLowerCase();
-    }
-  }
-};
-
-window.addEventListener('keydown', snakeGame.handleKeyPress);
+function gameLoop() {
+  // Function that does all the updating (snake update food update)
+  //console.log(snakeGame.allSegments[0].x, snakeGame.allSegments[0].y);
+  updateAll();
+  checkCollisions();
+  // Function to clear screen
+  ctx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
+  // Looping backwards through snakesegments and not including the head = [0]
+  drawAll();
+}
 
 snakeGame.setData = function () {
-
-
   snakeGame.allSegments = [];
   snakeGame.squareSize = 40;
   snakeGame.snakeSegmentSize = 36;
@@ -24,47 +19,41 @@ snakeGame.setData = function () {
   snakeGame.canvas.height = 450;
   snakeGame.timeout = 1000 / 6;
   snakeGame.activeKey = '';
-  snakeGame.allowedKeys = ['w', 'a', 's', 'd', 'q', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
+  snakeGame.allowedKeys = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
   snakeGame.allFood = [];
+  snakeGame.score = 0;
+  snakeGame.initials = '';
+  snakeGame.segmentColor = 'green';
+  snakeGame.foodColor = 'red';
 };
-
 
 snakeGame.newGame = function () {
   snakeGame.allSegments = [];
-  new SnakeSegment(snakeCtx, snakeGame.squareSize * 4, snakeGame.squareSize * 6, 1, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
-  new SnakeSegment(snakeCtx, snakeGame.squareSize * 3, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
-  new SnakeSegment(snakeCtx, snakeGame.squareSize * 2, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
-  new SnakeFood(snakeCtx, 100, 100, 0, 0, 25, 25, 'red');
-  gameLoop();
+  new SnakeSegment(ctx, snakeGame.squareSize * 4, snakeGame.squareSize * 6, 1, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeSegment(ctx, snakeGame.squareSize * 3, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeSegment(ctx, snakeGame.squareSize * 2, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeFood(ctx, 100, 100, 0, 0, 25, 25, 'red');
+  snakeGame.state = 'snake';
 };
 
 snakeGame.continueGame = function () {
   setTimeout(gameLoop, snakeGame.timeout);
 };
 
-function gameLoop() {
-  // Function that does all the updating (snake update food update)
-  //console.log(snakeGame.allSegments[0].x, snakeGame.allSegments[0].y);
-  updateAll();
-  checkCollisions();
-  // Function to clear screen
-  snakeCtx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
-  // Looping backwards through snakesegments and not including the head = [0]
-  drawAll();
-  if (snakeGame.activeKey !== 'q') {
-    setTimeout(gameLoop, snakeGame.timeout);
-  }
-  //if (snakeGame.activeKey === 'p') {
-  //setTimeout(gameLoop, snakeGame.timeout);
-  //}
 
-  //snakeGame.showIntro();
-  // Check for collisions (walls food self)
-}
 
 snakeGame.showIntro = function () {
-  snakeCtx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
+  ctx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
   //draw text
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 0, menuCanvas.width, menuCanvas.height);
+  ctx.font = 'bold 70px monospace';
+  ctx.fillStyle = 'green';
+  ctx.fillText('snake', 240, 100);
+  ctx.font = '40px monospace';
+  ctx.fillText('Press spacebar to begin.', 0, 300);
+  ctx.fillText('W A S D or arrow keys to move', 0, 400);
+
 };
 
 
@@ -191,14 +180,14 @@ function drawGameBoard() {
   for (let rows = 0; rows < snakeGame.numRows; rows++) {
     for (let columns = 0; columns < snakeGame.numColumns; columns++) {
       if ((isOdd(rows) && isEven(columns)) || ((isEven(rows) && isOdd(columns)))) {
-        snakeCtx.fillStyle = '#c0eb5d';
-        //snakeCtx.fillStyle = '#4168AB';
+        ctx.fillStyle = '#c0eb5d';
+        //ctx.fillStyle = '#4168AB';
       } else {
-        snakeCtx.fillStyle = '#ccef7d';
-        //snakeCtx.fillStyle = '#3D4B75';
+        ctx.fillStyle = '#ccef7d';
+        //ctx.fillStyle = '#3D4B75';
       }
-      snakeCtx.beginPath();
-      snakeCtx.fillRect(columns * 40, rows * 40, 40, 40);
+      ctx.beginPath();
+      ctx.fillRect(columns * 40, rows * 40, 40, 40);
     }
   }
 }
@@ -225,9 +214,12 @@ function checkCollisions() {
   }
   // outside game board
   if (head.x < 0 || head.x + snakeGame.squareSize > snakeGame.canvas.width || head.y < 0 || head.y + snakeGame.squareSize > snakeGame.canvas.height) {
+    state = 'gameOver';
   }
   // Add new segment
   if (foodHead.collision) {
+    snakeGame.score += 100;
+    console.log(snakeGame.score);
     snakeGame.allSegments[snakeGame.allSegments.length - 1].add();
   }
 
@@ -238,6 +230,7 @@ function checkCollisions() {
       if (rectIntersect(a.x, a.y, a.width, a.height, b.x, b.y, b.width, b.height)) {
         a.collision = true;
         b.collision = true;
+        state = 'gameOver';
       }
     }
   }
@@ -276,6 +269,4 @@ function drawAll() {
     snakeGame.allFood[i].draw();
   }
 }
-
-
 
