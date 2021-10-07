@@ -79,9 +79,9 @@ canvas#snake, canvas#menu {
 #cabinetBackground {
     background-color: black;
     height: 900px;
-    width: 700px;
+    width: 947px;
     position: relative;
-    left: 400px;
+    left: 260px;
     top: 400px;
     z-index: -1;
 }
@@ -92,4 +92,13 @@ footer {
     position: relative;
     top: 750px;
     left: 840px;
+}
+canvas#menu {
+    height: 125px;
+    width: 900px;
+    position: relative;
+    left: 580px;
+    bottom: 1165px;
+    background-color: transparent;
+    z-index: 0;
 }
