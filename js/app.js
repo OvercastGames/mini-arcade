@@ -33,7 +33,7 @@ function handleKeyPress(event) {
     key === ' ') {
     event.preventDefault();
   }
-
+  console.log(key);
   switch (state) {
   case 'menu':
     if (key === '1') state = 'directions';
@@ -48,7 +48,7 @@ function handleKeyPress(event) {
   case 'paused':
     if (key === 'escape') {
       state = 'menu';
-    } else if (key === ' ') {
+    } else if (key === 'p' || key === ' ') {
       state = 'snake';
     }
     break;
@@ -213,25 +213,30 @@ function appLoop(timestamp) {
     previousTimeStamp = timestamp;
   }
 
-  if (state === 'menu') {
+  switch (state) {
+  case 'menu':
     drawMainMenu();
     previousTimeStamp = timestamp;
     window.requestAnimationFrame(appLoop);
-  } else if (state === 'snake') {
+    break;
+  case 'snake':
     previousTimeStamp = timestamp;
     setTimeout(function () {
       gameLoop();
       requestAnimationFrame(appLoop);
     }, 1000 / 5);
-  } else if (state === 'directions') {
+    break;
+  case 'directions':
     drawSnakeDirections();
     previousTimeStamp = timestamp;
     window.requestAnimationFrame(appLoop);
-  } else if (state === 'paused') {
+    break;
+  case 'paused':
     drawPauseMenu();
     previousTimeStamp = timestamp;
     window.requestAnimationFrame(appLoop);
-  } else if (state === 'gameOver') {
+    break;
+  case 'gameOver':
     if (isNewHighScore(snakeGame.score)) {
       // do modal popup and adjust highscore list in localstorage
       state = 'highScore';
@@ -242,25 +247,23 @@ function appLoop(timestamp) {
       previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
     }
-    // if not we go display game over
-    // and then go to main menu
-
-    // check localstorage for highscore stuff
-    // check
-  } else if (state === 'highScore') {
+    break;
+  case 'highScore':
     drawYesHighScore();
     previousTimeStamp = timestamp;
     window.requestAnimationFrame(appLoop);
-  } else if (state === 'noHighScore') {
+    break;
+  case 'noHighScore':
     drawNoHighScore();
     previousTimeStamp = timestamp;
     window.requestAnimationFrame(appLoop);
-  } else if (state === 'showHighScore') {
+    break;
+  case 'showHighScore':
     drawHightScoreList();
     previousTimeStamp = timestamp;
     window.requestAnimationFrame(appLoop);
-  } else {
-
+    break;
+  default:
     previousTimeStamp = timestamp;
     window.requestAnimationFrame(appLoop);
 
