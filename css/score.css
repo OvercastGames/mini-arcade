@@ -1,22 +1,21 @@
-
 footer {
     text-align: center;
     font-size: 30px;
 }
 
 section {
-    width: 2100px;
     display: grid;
-    grid-template-columns: 200px 300px 400px 300px 400px 300px 200px;
+    grid-template-columns: auto auto auto auto auto auto;
     grid-template-rows: 450px;
+    position: relative;
     border-style:outset;
     border-color: #ccff15;
     border-width: 10px;
     text-align: center;
-    margin-left: 10px;
     text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 0.2em yellow;
     color:#ccff15;
     background-color: rgba(0,0,0, 0.8);
+    text-align: center;
    
 }
 
@@ -24,6 +23,8 @@ h1 {
     text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 0.2em yellow;
     color:#ccff15;
     text-align: center;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 50px;
 
     animation: glow 1.5s infinite alternate;
@@ -47,12 +48,18 @@ h2 {
     }
 }
 
+#initialsBox {
+    position: relative;
+}
+
 div#score {
     grid-column-start: 5;
-    grid-column-end: 7;
+    grid-column-end: auto;
 }
 #score-ol {
     list-style: none; 
+    position: relative;
+    right: 22px;
 }
 div#initials {
     grid-column-start: 2;
@@ -67,9 +74,32 @@ body {
     background-image: url("/img/Collage.jpg");
     background-size: 100%;
     background-repeat: no-repeat;
-    width: 1900px;
 }
 
 footer {
     color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 100vw;
+    animation: glowfoot .5s infinite alternate;
+}
+
+@keyframes glowfoot {
+    to {
+        text-shadow: 0 5px 15px white
+    }    
+}
+
+section {
+    position: relative;
+    left: 250px;
+    width: 70vw;
+}
+main {
+    width: 70vw;
+}
+
+#highScore {
+    position: relative;
+    left: 280px;
 }
