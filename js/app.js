@@ -2,15 +2,17 @@
 
 let canvas = document.getElementById('snake');
 let ctx = canvas.getContext('2d');
-let snakeGame = new Game(canvas, ctx);
+let snakeGame = new Game(canvas, ctx, '#fff64d');
 let previousTimeStamp;
 let state = 'menu';
+let menuTextColor = 'green';
 
 window.addEventListener('keydown', handleKeyPress);
 
-function Game(canvas, context) {
+function Game(canvas, context, textColor) {
   this.canvas = canvas;
   this.context = context;
+  this.textColor = textColor;
 }
 
 function GameObject(context, x, y, vx, vy) {
@@ -97,7 +99,7 @@ function drawMainMenu() {
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.font = 'bold 70px monospace';
-  ctx.fillStyle = 'green';
+  ctx.fillStyle = menuTextColor;
   ctx.fillText('Mini', 200, 100);
   ctx.fillText('Arcade', 160, 170);
   ctx.font = '40px monospace';
@@ -111,7 +113,7 @@ function drawSnakeDirections() {
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.font = 'bold 70px monospace';
-  ctx.fillStyle = 'green';
+  ctx.fillStyle = snakeGame.textColor;
   ctx.fillText('Snake', 200, 100);
   ctx.font = '40px monospace';
   ctx.fillText('Move with WASD or arrows.', 0, 300);
@@ -124,7 +126,7 @@ function drawPauseMenu() {
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.font = 'bold 70px monospace';
-  ctx.fillStyle = 'green';
+  ctx.fillStyle = snakeGame.textColor;
   ctx.fillText('Paused', 240, 100);
   ctx.font = '40px monospace';
   ctx.fillText('Press spacebar to continue.', 0, 200);
@@ -136,7 +138,7 @@ function drawYesHighScore() {
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.font = 'bold 70px monospace';
-  ctx.fillStyle = 'green';
+  ctx.fillStyle = snakeGame.textColor;
   ctx.fillText('High Score!', 75, 100);
   ctx.font = '40px monospace';
   ctx.fillText('Enter Initials', 115, 200);
@@ -149,7 +151,7 @@ function drawHightScoreList() {
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.font = 'bold 70px monospace';
-  ctx.fillStyle = 'green';
+  ctx.fillStyle = snakeGame.textColor;
   ctx.fillText('HIGH SCORE', 70, 100);
   ctx.font = '40px monospace';
   for (let i = 0; i < HighScore.all.length; i++) {
@@ -164,7 +166,7 @@ function drawNoHighScore() {
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.font = 'bold 70px monospace';
-  ctx.fillStyle = 'green';
+  ctx.fillStyle = snakeGame.textColor;
   ctx.fillText('Game Over', 95, 100);
   ctx.font = '40px monospace';
   ctx.fillText('Spacebar to continue.', 30, 200);

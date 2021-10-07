@@ -23,6 +23,8 @@ snakeGame.setData = function () {
   snakeGame.allFood = [];
   snakeGame.score = 0;
   snakeGame.initials = '';
+  snakeGame.segmentColor = 'green';
+  snakeGame.foodColor = 'red';
 };
 
 snakeGame.newGame = function () {
