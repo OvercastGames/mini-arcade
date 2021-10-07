@@ -47,12 +47,19 @@ h2 {
     }
 }
 
+#initialsBox {
+    position: relative;
+    left: 15px;
+}
+
 div#score {
     grid-column-start: 5;
     grid-column-end: 7;
 }
 #score-ol {
     list-style: none; 
+    position: relative;
+    right: 22px;
 }
 div#initials {
     grid-column-start: 2;
@@ -72,4 +79,22 @@ body {
 
 footer {
     color: white;
+    position: relative;
+    left: 1100px;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 300px;
 }
+section {
+    position: relative;
+    left: 250px;
+    width: 70vw;
+}
+main {
+    width: 70vw;
+}
+
+#highScore {
+    position: relative;
+    left: 280px;
+}
+

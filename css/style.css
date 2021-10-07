@@ -24,7 +24,7 @@ navbar {
     padding:30px;
     filter:url(#stroke) url(#inner-glow) url(#outer-glow) url(#outer-glow1);
   }
-}
+
 
 
 div.About:hover {

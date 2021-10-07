@@ -65,7 +65,7 @@ canvas#snake, canvas#menu {
     grid-row-start: 3;
     grid-row-end:  4;
     position:relative;
-    left: 425px;
+    left: 435px;
     bottom: -48px;
     z-index: -1;
 }
@@ -82,11 +82,19 @@ body {
 
 #cabinetBackground {
     background-color: black;
-    height: 600px;
+    height: 900px;
     width: 700px;
     position: relative;
     left: 400px;
     top: 400px;
     z-index: -1;
 
+}
+
+footer {
+    font-size: 40px;
+    color: white;
+    position: relative;
+    top: 750px;
+    left: 840px;
 }
