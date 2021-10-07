@@ -24,8 +24,6 @@ navbar {
     padding:30px;
     filter:url(#stroke) url(#inner-glow) url(#outer-glow) url(#outer-glow1);
   }
-}
-
 
 div.About:hover {
     text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 5em yellow;
