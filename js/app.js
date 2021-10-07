@@ -33,7 +33,6 @@ function handleKeyPress(event) {
     key === ' ') {
     event.preventDefault();
   }
-  console.log(key);
   switch (state) {
   case 'menu':
     if (key === '1') state = 'directions';
@@ -208,7 +207,6 @@ function setNewHighScore(newInitial, newScore) {
 }
 
 function appLoop(timestamp) {
-  console.log(state);
   if (previousTimeStamp === undefined) {
     previousTimeStamp = timestamp;
   }

@@ -1,11 +1,7 @@
 function gameLoop() {
-  // Function that does all the updating (snake update food update)
-  //console.log(snakeGame.allSegments[0].x, snakeGame.allSegments[0].y);
   updateAll();
   checkCollisions();
-  // Function to clear screen
-  ctx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
-  // Looping backwards through snakesegments and not including the head = [0]
+  snakeGame.context.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
   drawAll();
 }
 
@@ -23,8 +19,9 @@ snakeGame.setData = function () {
   snakeGame.allFood = [];
   snakeGame.score = 0;
   snakeGame.initials = '';
-  snakeGame.segmentColor = 'green';
+  snakeGame.segmentColor = 'linear-gradient(#74f330, #000000)';
   snakeGame.foodColor = 'red';
+  snakeGame.scoreDisplayBuffer = 0;
 };
 
 snakeGame.newGame = function () {
@@ -83,13 +80,18 @@ SnakeSegment.prototype.add = function () {
 
 SnakeSegment.prototype.draw = function () {
   // How a snake segment is shown on the screen
+  let grd = snakeGame.context.createLinearGradient(0, 0, 600, 0);
+  grd.addColorStop(.0, '#f33074');
+  grd.addColorStop(.33, '#fff64d');
+  grd.addColorStop(.66, '#30f0af');
+  grd.addColorStop(1, '#6cdef6');
   let padding = (snakeGame.squareSize - this.width) / 2;
   if (this.collision) {
     this.context.fillStyle = 'yellow';
   } else {
-    this.context.fillStyle = 'green';
+    this.context.fillStyle = grd;
   }
-  this.context.fillRect(this.x, this.y, this.height, this.width);
+  this.context.fillRect(this.x + padding, this.y + padding, this.height, this.width);
 
 };
 
@@ -137,13 +139,23 @@ function SnakeFood(context, x, y, vx, vy, height, width, color) {
 
 SnakeFood.prototype.draw = function () {
   let padding = (snakeGame.squareSize - this.width) / 2;
-  if (this.collision) {
-    this.context.fillStyle = 'orange';
-  } else {
-    this.context.fillStyle = 'red';
-  }
-  this.context.fillRect(this.x, this.y, this.height, this.width);
+  this.context.lineWidth = 5;
+  this.context.strokeStyle = 'white';
+  this.context.fillStyle = '#f33074';
+  this.context.fillRect(this.x + padding, this.y + padding, this.height, this.width);
+  this.context.strokeRect(this.x + padding, this.y + padding, this.height, this.width);
+
 };
+
+
+function drawScoreToScreen() {
+
+  snakeGame.context.fillStyle = '#00000077';
+  snakeGame.context.font = 'bold 80px monospace';
+  snakeGame.context.fillText(snakeGame.score, 20, 70);
+  snakeGame.context.strokeStyle = '#ffffff77';
+  snakeGame.context.strokeText(snakeGame.score, 20, 70);
+}
 
 SnakeFood.prototype.update = function () {
   if (this.collision) {
@@ -180,10 +192,10 @@ function drawGameBoard() {
   for (let rows = 0; rows < snakeGame.numRows; rows++) {
     for (let columns = 0; columns < snakeGame.numColumns; columns++) {
       if ((isOdd(rows) && isEven(columns)) || ((isEven(rows) && isOdd(columns)))) {
-        ctx.fillStyle = '#c0eb5d';
+        ctx.fillStyle = '#fddde8';
         //ctx.fillStyle = '#4168AB';
       } else {
-        ctx.fillStyle = '#ccef7d';
+        ctx.fillStyle = '#fbbad1';
         //ctx.fillStyle = '#3D4B75';
       }
       ctx.beginPath();
@@ -219,7 +231,6 @@ function checkCollisions() {
   // Add new segment
   if (foodHead.collision) {
     snakeGame.score += 100;
-    console.log(snakeGame.score);
     snakeGame.allSegments[snakeGame.allSegments.length - 1].add();
   }
 
@@ -257,6 +268,7 @@ function updateAll() {
     snakeGame.allFood[i].update();
   }
   snakeGame.allSegments[0].update();
+
 }
 
 function drawAll() {
@@ -267,6 +279,16 @@ function drawAll() {
   }
   for (let i = 0; i < snakeGame.allFood.length; i++) {
     snakeGame.allFood[i].draw();
+  }
+
+  if (snakeGame.allFood[0].collision) {
+    snakeGame.scoreDisplayBuffer = 1;
+    drawScoreToScreen();
+  } else if (snakeGame.scoreDisplayBuffer > 0 && snakeGame.scoreDisplayBuffer < 4) {
+    drawScoreToScreen();
+    snakeGame.scoreDisplayBuffer++;
+  } else {
+    snakeGame.scoreDisplayBuffer = 0;
   }
 }
 
