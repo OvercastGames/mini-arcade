@@ -228,6 +228,8 @@ function checkCollisions() {
   // outside game board
   if (head.x < 0 || head.x + snakeGame.squareSize > snakeGame.canvas.width || head.y < 0 || head.y + snakeGame.squareSize > snakeGame.canvas.height) {
     state = 'gameOver';
+    let sound = new Audio('../audio/death.wav');
+    sound.play();
   }
   // Add new segment
   if (foodHead.collision) {
@@ -243,6 +245,8 @@ function checkCollisions() {
         a.collision = true;
         b.collision = true;
         state = 'gameOver';
+        let sound = new Audio('../audio/death.wav');
+        sound.play();
       }
     }
   }
@@ -284,7 +288,7 @@ function drawAll() {
 
   if (snakeGame.allFood[0].collision) {
     if (!snakeGame.muted) {
-      let sound = new Audio('../audio/pickup.wav');
+      let sound = new Audio('../audio/pickup-food.wav');
       sound.play();
     }
     snakeGame.scoreDisplayBuffer = 1;

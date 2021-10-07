@@ -5,7 +5,11 @@ let ctx = canvas.getContext('2d');
 let snakeGame = new Game(canvas, ctx, '#fff64d');
 let previousTimeStamp;
 let state = 'menu';
-let menuTextColor = 'green';
+let menuTextColor = '#187856';
+let kenneyThick = new FontFace('kenney-thick', 'url(../img/kenney-thick.ttf)');
+document.fonts.add(kenneyThick);
+let kenney = new FontFace('kenney', 'url(../img/kenney.ttf)');
+document.fonts.add(kenney);
 
 window.addEventListener('keydown', handleKeyPress);
 
@@ -93,82 +97,85 @@ function isValidLetter(letter) {
 }
 
 function drawMainMenu() {
+
   canvas.width = 600;
   canvas.height = 440;
-  ctx.fillStyle = 'black';
+  ctx.fillStyle = '#30f0af';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px monospace';
+  ctx.font = 'bold 70px kenney-thick';
   ctx.fillStyle = menuTextColor;
-  ctx.fillText('Mini', 200, 100);
-  ctx.fillText('Arcade', 160, 170);
-  ctx.font = '40px monospace';
-  ctx.fillText('Press 1 For Snake', 65, 300);
-  ctx.fillText('Press 2 Coming Soon', 65, 350);
+  ctx.fillText('Mini', 175, 100);
+  ctx.fillText('Arcade', 100, 180);
+  ctx.font = '70px kenney';
+  ctx.fillText('PRESS 1 FOR SNAKE', 110, 300);
+  ctx.fillText('PRESS 2 COMING SOON', 80, 350);
 }
 
 function drawSnakeDirections() {
   canvas.width = 600;
   canvas.height = 440;
-  ctx.fillStyle = 'black';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px monospace';
   ctx.fillStyle = snakeGame.textColor;
-  ctx.fillText('Snake', 200, 100);
-  ctx.font = '40px monospace';
-  ctx.fillText('Move with WASD or arrows.', 0, 300);
-  ctx.fillText('Spacebar to continue.', 0, 350);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = 'bold 70px kenney-thick';
+  ctx.fillStyle = '#99932e';
+  ctx.fillText('Snake', 125, 100);
+  ctx.font = '70px kenney';
+  ctx.fillText('MOVE WITH WASD OR ARROWS.', 15, 300);
+  ctx.fillText('SPACEBAR TO CONTINUE.', 60, 350);
 }
 
 function drawPauseMenu() {
   canvas.width = 600;
   canvas.height = 440;
-  ctx.fillStyle = 'black';
+  ctx.fillStyle = '#22210f';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px monospace';
+  ctx.font = 'bold 70px kenney-thick';
   ctx.fillStyle = snakeGame.textColor;
-  ctx.fillText('Paused', 240, 100);
-  ctx.font = '40px monospace';
-  ctx.fillText('Press spacebar to continue.', 0, 200);
-  ctx.fillText('Press esc to quit.', 0, 300);
+  ctx.fillText('PAUSED', 240, 100);
+  ctx.font = '40px kenney';
+  ctx.fillText('PRESS SPACEBAR TO CONTINUE.', 0, 200);
+  ctx.fillText('PRESS ESC TO QUIT.', 0, 300);
 }
 function drawYesHighScore() {
   canvas.width = 600;
   canvas.height = 440;
-  ctx.fillStyle = 'black';
+  ctx.fillStyle = '#22210f';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px monospace';
+  ctx.font = 'bold 70px kenney-thick';
   ctx.fillStyle = snakeGame.textColor;
-  ctx.fillText('High Score!', 75, 100);
-  ctx.font = '40px monospace';
-  ctx.fillText('Enter Initials', 115, 200);
-  ctx.font = 'bold 120px monospace';
-  ctx.fillText(snakeGame.initials, 170, 370);
+  ctx.fillText('HIGH', 160, 100);
+  ctx.fillText('SCORE', 115, 180);
+  ctx.font = '70px kenney';
+  ctx.fillText('ENTER INITIALS', 145, 250);
+  ctx.font = 'bold 105px kenney-thick';
+  ctx.fillText(snakeGame.initials, 145, 390);
 }
 function drawHightScoreList() {
   canvas.width = 600;
   canvas.height = 440;
-  ctx.fillStyle = 'black';
+  ctx.fillStyle = '#22210f';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px monospace';
+  ctx.font = 'bold 70px kenney-thick';
   ctx.fillStyle = snakeGame.textColor;
-  ctx.fillText('HIGH SCORE', 70, 100);
-  ctx.font = '40px monospace';
+  ctx.fillText('HIGH', 160, 100);
+  ctx.fillText('SCORE', 115, 180);
+  ctx.font = '70px kenney';
   for (let i = 0; i < HighScore.all.length; i++) {
-    ctx.fillText(HighScore.all[i].initial.toUpperCase(), 70, 200 + i * 45);
-    ctx.fillText(HighScore.all[i].score, 390, 200 + i * 45);
+    ctx.fillText(HighScore.all[i].initial.toUpperCase(), 110, 240 + i * 45);
+    ctx.fillText(HighScore.all[i].score, 365, 240 + i * 45);
   }
-
 }
 function drawNoHighScore() {
   canvas.width = 600;
   canvas.height = 440;
-  ctx.fillStyle = 'black';
+  ctx.fillStyle = '#22210f';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px monospace';
+  ctx.font = 'bold 70px kenney-thick';
   ctx.fillStyle = snakeGame.textColor;
-  ctx.fillText('Game Over', 95, 100);
-  ctx.font = '40px monospace';
-  ctx.fillText('Spacebar to continue.', 30, 200);
+  ctx.fillText('Game', 165, 100);
+  ctx.fillText('Over', 165, 180);
+  ctx.font = '70px kenney';
+  ctx.fillText('SPACEBAR TO CONTINUE.', 60, 350);
 }
 
 
@@ -238,9 +245,14 @@ function appLoop(timestamp) {
     if (isNewHighScore(snakeGame.score)) {
       // do modal popup and adjust highscore list in localstorage
       state = 'highScore';
+      let sound = new Audio('../audio/new-highscore.ogg');
+      setTimeout(function () {
+        sound.play();
+      }, 1000);
       previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
     } else {
+
       state = 'noHighScore';
       previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
