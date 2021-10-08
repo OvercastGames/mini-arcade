@@ -1,5 +1,5 @@
 body {
-    background-image: url("/img/retro-tile-background.jpg");
+    background-image: url("./img/retro-tile-background.jpg");
     background-color: #cccccc;
     margin: auto;
     max-width: 80vw;
@@ -10,7 +10,7 @@ navbar {
     display: grid;
     grid-template-columns: auto auto auto auto auto;
     grid-template-rows: 130px;
-    background-image: url("/img/black-space-with-lot-stars-2469662.jpg");
+    background-image: url("./img/black-space-with-lot-stars-2469662.jpg");
 }
 
 img#navimg {
