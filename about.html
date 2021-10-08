@@ -1,106 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=80%">
-    <title>Document</title>
-    <link rel="stylesheet" href="reset.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/about.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=80%">
+  <title>Document</title>
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/about.css">
 </head>
 
 <body>
-    <header>
-		<navbar>
-            <div class="centered">
-				<a href="index.html"><div class="neon">Mini Arcade</div></a>
-			</div>
-			<svg>
-				<defs>
-					<filter id="stroke">
-						<feMorphology operator="dilate" radius="1" in="SourceGraphic" result="outside" />
-						<feMorphology operator="dilate" radius="2" in="outside" result="thickened" />
-						<feComposite operator="out" in2="SourceGraphic" in="thickened" result="stroke" />
+  <header>
+    <navbar>
+      <div class="centered">
+        <a href="index.html">
+          <div class="neon">Mini Arcade</div>
+        </a>
+      </div>
+      <svg>
+        <defs>
+          <filter id="stroke">
+            <feMorphology operator="dilate" radius="1" in="SourceGraphic" result="outside" />
+            <feMorphology operator="dilate" radius="2" in="outside" result="thickened" />
+            <feComposite operator="out" in2="SourceGraphic" in="thickened" result="stroke" />
 
-					</filter>
+          </filter>
 
-					<filter id="inner-glow">
-						<feFlood flood-color="#e10b8d" />
-						<feComposite in2="SourceAlpha" operator="out" />
-						<feGaussianBlur stdDeviation="0.5" result="blur" />
-						<feComposite operator="atop" in2="SourceGraphic" />
+          <filter id="inner-glow">
+            <feFlood flood-color="#e10b8d" />
+            <feComposite in2="SourceAlpha" operator="out" />
+            <feGaussianBlur stdDeviation="0.5" result="blur" />
+            <feComposite operator="atop" in2="SourceGraphic" />
 
-					</filter>
+          </filter>
 
-					<filter id="outer-glow">
-						<feMorphology operator="dilate" radius="2" in="SourceAlpha" result="thicken" />
-						<feGaussianBlur in="thicken" stdDeviation="5" result="blurred" />
-						<feFlood flood-color="#db0273" result="glowColor" />
-						<feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
-						<feMerge>
-							<feMergeNode in="softGlow_colored" />
-							<feMergeNode in="SourceGraphic" />
-						</feMerge>
-					</filter>
-					<filter id="outer-glow1">
-						<feMorphology operator="dilate" radius="20" in="SourceAlpha" result="thicken" />
-						<feGaussianBlur in="thicken" stdDeviation="25" result="blurred" />
-						<feFlood flood-color="#530139" result="glowColor" />
-						<feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
-						<feMerge>
-							<feMergeNode in="softGlow_colored" />
-							<feMergeNode in="SourceGraphic" />
-						</feMerge>
-					</filter>
-				</defs>
-			</svg>
-                        <div class="Home"><a href="./index.html">Home</a></div>
-                        <div class="About"><a href="./about.html">About</a></div>
-                    <div class="Score"><a href="./score.html">Score</a></div>
-            </navbar>
-	</header>
+          <filter id="outer-glow">
+            <feMorphology operator="dilate" radius="2" in="SourceAlpha" result="thicken" />
+            <feGaussianBlur in="thicken" stdDeviation="5" result="blurred" />
+            <feFlood flood-color="#db0273" result="glowColor" />
+            <feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
+            <feMerge>
+              <feMergeNode in="softGlow_colored" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="outer-glow1">
+            <feMorphology operator="dilate" radius="20" in="SourceAlpha" result="thicken" />
+            <feGaussianBlur in="thicken" stdDeviation="25" result="blurred" />
+            <feFlood flood-color="#530139" result="glowColor" />
+            <feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
+            <feMerge>
+              <feMergeNode in="softGlow_colored" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+      </svg>
+      <div class="Home"><a href="./index.html">Home</a></div>
+      <div class="About"><a href="./about.html">About</a></div>
+      <div class="Score"><a href="./score.html">Score</a></div>
+    </navbar>
+  </header>
 
-	<main>
+  <main>
 
-            <img id="Kirk" src="img/kirk-72dpi-crop-square.jpg">
+    <img id="Kirk" src="img/kirk-72dpi-crop-square.jpg">
 
-            <div class="container1">
-				<p>I've spent most of my career managing a small, independent paint-your-own pottery studio. Over the years I've spent more and more of my free time tinkering late at night with command line tools, scripts and programming languages. A while back when an opportunity to use these hobbies at work came up I was so excited by the challenge and so proud of the results that I realized software development was something I could do well and be passionate about. I'm looking for a position were I can work with a team of people that are as curious as I am about learning how technologies work and solving problems. I really enjoyed working in customer service and I see those skills, of offering support and being empathetic and patient, to be a huge asset working with a team.</p>
-            </div>
-        
-            <img id="Ben" src="img/ben-72dpi-crop-square.jpg">
+    <div class="container1">
+      <p>I've spent most of my career managing a small, independent paint-your-own pottery studio. Over the years I've
+        spent more and more of my free time tinkering late at night with command line tools, scripts and programming
+        languages. A while back when an opportunity to use these hobbies at work came up I was so excited by the
+        challenge and so proud of the results that I realized software development was something I could do well and be
+        passionate about. I'm looking for a position were I can work with a team of people that are as curious as I am
+        about learning how technologies work and solving problems. I really enjoyed working in customer service and I
+        see those skills, of offering support and being empathetic and patient, to be a huge asset working with a team.
+      </p>
+    </div>
 
-            <div class="container2">
-				<p>Before beginning my software engineering education at CodeFellows, I was studying to become a Registered Nurse at Skagit
-					Valley College. I'm adept at coordinating, motivating and working within a team to reach our objective.
-					I've always been interesting in computers, and after doing some research, coding really caught
-					my interest.. Ideally I'd like to work with a team to design, create, and troubleshoot applications remotely,
-					and I'd love the opportunity to develop my skillset further as an active member of a programming team.
-					I'm inspired by problem solving and finding solutions, and my previously experience with teamwork in Law Enforcement
-					help me to understand the value of a well coordinated team.</p>
-            </div>
+    <img id="Ben" src="img/ben-72dpi-crop-square.jpg">
 
-            <img id="Kevin" src="img/kevin-72dpi-crop-square.jpg">
+    <div class="container2">
+      <p>Before beginning my software engineering education at CodeFellows, I was studying to become a Registered Nurse
+        at Skagit
+        Valley College. I'm adept at coordinating, motivating and working within a team to reach our objective.
+        I've always been interesting in computers, and after doing some research, coding really caught
+        my interest.. Ideally I'd like to work with a team to design, create, and troubleshoot applications remotely,
+        and I'd love the opportunity to develop my skillset further as an active member of a programming team.
+        I'm inspired by problem solving and finding solutions, and my previously experience with teamwork in Law
+        Enforcement
+        help me to understand the value of a well coordinated team.</p>
+    </div>
 
-            <div class="container3">
-                <p> Hi, my name is Kevin Stone, I am a United States Navy Veteran with a secret clearance. While serving in the US Navy I worked as an Aviation Electronics Technician in the first half of my career, fixing RADAR equipment for F-18 jets, and for the second half, I moved into a more supervisory role. While in the Navy I got to hone my troubleshooting skills, leadership skills, and team management skills along with an assortment of other skills. At the tail end of my career in the Navy I was allowed to take a Microsoft Software and Systems Administration course that gave me a technical understanding of how the Azure Cloud works from a systems administration side. Although I enjoyed the class, I found myself enjoying writing scripts more than building out just virtual machines and networks. After diving more into what software engineers did I figured this would be the perfect role for me. The fact that I get to solve real world problems with code is the most rewarding thing. Software engineering allows me to think about problems and try and solve them through applications and I don't think there is anything cooler I could be doing with my time. If I had an ideal environment to use these new skills it would be in building systems that helps make companies more efficeint and more sustainable in the long run.  Also, building applications that can help solve a problem not only for businesses but everyday people would be a very rewarding way to use my new coding skills. My previous experience in the military gives me a leg up on the competition. Being able to work in teams with a high level of stress is something you do everyday on the job in the military. Knowing that lives are at stack when you are doing your job, these are just normal conditions in the military that will set me up for greater success in a coding environment.</p>
-            </div>
+    <img id="Kevin" src="img/kevin-72dpi-crop-square.jpg">
 
-            <img id="Justin" src="img/justin-72dpi-crop-square.jpg">
+    <div class="container3">
+      <p> Hi, my name is Kevin Stone, I am a United States Navy Veteran with a secret clearance. While serving in the US
+        Navy I worked as an Aviation Electronics Technician in the first half of my career, fixing RADAR equipment for
+        F-18 jets, and for the second half, I moved into a more supervisory role. While in the Navy I got to hone my
+        troubleshooting skills, leadership skills, and team management skills along with an assortment of other skills.
+        At the tail end of my career in the Navy I was allowed to take a Microsoft Software and Systems Administration
+        course that gave me a technical understanding of how the Azure Cloud works from a systems administration side.
+        Although I enjoyed the class, I found myself enjoying writing scripts more than building out just virtual
+        machines and networks. After diving more into what software engineers did I figured this would be the perfect
+        role for me. The fact that I get to solve real world problems with code is the most rewarding thing.</p>
+    </div>
 
-            <div class="container4">
-                <p>I was working on Wind Turbines as a Wind Technician.
-					It was mostly my curiosity that was sparked by some of my close friends mentioning for me to look into it.
-					For an environment, it's just pretty much anywhere I can learn.
-					My previous experience that helps me pretty much helps me in any situation is being very familiar with failure. I'm not going to be the smartest guy in the room but I do know how to get back up after a whole days worth of work turning out to not be the solution I needed.</p>
-            </div>
-		
-       
-	</main>
-    <footer>
-        <p>&copy;2021 Overcast Games</p>
-    </footer>
+    <img id="Justin" src="img/justin-72dpi-crop-square.jpg">
+
+    <div class="container4">
+      <p>I was working on Wind Turbines as a Wind Technician.
+        It was mostly my curiosity that was sparked by some of my close friends mentioning for me to look into it.
+        For an environment, it's just pretty much anywhere I can learn.
+        My previous experience that helps me pretty much helps me in any situation is being very familiar with failure.
+        I'm not going to be the smartest guy in the room but I do know how to get back up after a whole days worth of
+        work turning out to not be the solution I needed.</p>
+    </div>
+
+
+  </main>
+  <footer>
+    <p>&copy;2021 Overcast Games</p>
+  </footer>
 
 </body>
+
 </html>
