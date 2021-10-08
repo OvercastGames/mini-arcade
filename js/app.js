@@ -2,8 +2,8 @@
 
 let canvas = document.getElementById('snake');
 let ctx = canvas.getContext('2d');
-// let joystickCanvas = document.getElementById('joystick');
-// let joystickCtx = canvas.getContext('2d');
+let joystickCanvas = document.getElementById('joystick');
+let joystickCtx = joystickCanvas.getContext('2d');
 let snakeGame = new Game(canvas, ctx, '#fff64d');
 let previousTimeStamp;
 let state = 'menu';
@@ -13,21 +13,20 @@ document.fonts.add(kenneyThick);
 let kenney = new FontFace('kenney', 'url(../img/kenney.ttf)');
 document.fonts.add(kenney);
 
-// loading all the joystick images
-// joystickCanvas.width = 400;
-// joystickCanvas.height = 213;
-// let upImg = new Image();
-// upImg.src = '../img/joystickup.png';
-// let downImg = new Image();
-// downImg.src = '../img/joystickdown.png';
-// let leftImg = new Image();
-// leftImg.src = '../img/joystickleft.png';
-// let rightImg = new Image();
-// rightImg.src = '../img/joystickright.png';
-// let normalImg = new Image();
-// normalImg.src = '../img/joysticknormal.png';
-// // joystickCtx.drawImage(normalImg, 400, 100);
-// joystickCtx.fillRect(0, 0, joystickCanvas.width, joystickCanvas.height);
+//loading all the joystick images
+joystickCanvas.width = 400;
+joystickCanvas.height = 213;
+let upImg = new Image();
+upImg.src = '../img/joystickup.png';
+let downImg = new Image();
+downImg.src = '../img/joystickdown.png';
+let leftImg = new Image();
+leftImg.src = '../img/joystickleft.png';
+let rightImg = new Image();
+rightImg.src = '../img/joystickright.png';
+let normalImg = new Image();
+normalImg.src = '../img/joysticknormal.png';
+joystickCtx.drawImage(normalImg, 400, 100);
 
 
 window.addEventListener('keydown', handleKeyPress);
@@ -109,39 +108,39 @@ function handleKeyPress(event) {
     break;
   }
 }
-// //150 125 height joystick
-// function drawJoystick(key) {
-//   joystickCtx.clearRect(0, 0, joystickCanvas.width, joystickCanvas.height);
-//   switch (key) {
-//   case 'arrowup':
-//     joystickCtx.drawImage(upImg, 0, 0);
-//     break;
-//   case 'arrowdown':
-//     joystickCtx.drawImage(downImg, 0, 0);
-//     break;
-//   case 'arrowleft':
-//     joystickCtx.drawImage(leftImg, 0, 0);
-//     break;
-//   case 'arrowright':
-//     joystickCtx.drawImage(rightImg, 0, 0);
-//     break;
-//   case 'w':
-//     joystickCtx.drawImage(upImg, 0, 0);
-//     break;
-//   case 's':
-//     joystickCtx.drawImage(downImg, 0, 0);
-//     break;
-//   case 'a':
-//     joystickCtx.drawImage(leftImg, 0, 0);
-//     break;
-//   case 'd':
-//     joystickCtx.drawImage(rightImg, 0, 0);
-//     break;
-//   default:
-//     joystickCtx.drawImage(normalImg, 0, 0);
-//     break;
-//   }
-// }
+
+function drawJoystick(key) {
+  joystickCtx.clearRect(0, 0, joystickCanvas.width, joystickCanvas.height);
+  switch (key) {
+  case 'arrowup':
+    joystickCtx.drawImage(upImg, 0, 0);
+    break;
+  case 'arrowdown':
+    joystickCtx.drawImage(downImg, 0, 0);
+    break;
+  case 'arrowleft':
+    joystickCtx.drawImage(leftImg, 0, 0);
+    break;
+  case 'arrowright':
+    joystickCtx.drawImage(rightImg, 0, 0);
+    break;
+  case 'w':
+    joystickCtx.drawImage(upImg, 0, 0);
+    break;
+  case 's':
+    joystickCtx.drawImage(downImg, 0, 0);
+    break;
+  case 'a':
+    joystickCtx.drawImage(leftImg, 0, 0);
+    break;
+  case 'd':
+    joystickCtx.drawImage(rightImg, 0, 0);
+    break;
+  default:
+    joystickCtx.drawImage(normalImg, 0, 0);
+    break;
+  }
+}
 
 function isValidLetter(letter) {
   let valid = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
@@ -269,8 +268,12 @@ function setNewHighScore(newInitial, newScore) {
 }
 
 function appLoop(timestamp) {
-  if (previousTimeStamp === undefined) {
+  if (!previousTimeStamp) {
     previousTimeStamp = timestamp;
+  }
+  // Draws the initial joystick normal view hopefully at least once before we get keyboard input
+  if (previousTimeStamp > 0 && previousTimeStamp < 500) {
+    joystickCtx.drawImage(normalImg, 0, 0);
   }
 
   switch (state) {
@@ -336,4 +339,6 @@ function appLoop(timestamp) {
   }
 }
 
-window.requestAnimationFrame(appLoop);
+
+normalImg.onload = window.requestAnimationFrame(appLoop);
+
