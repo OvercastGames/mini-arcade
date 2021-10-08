@@ -5,7 +5,7 @@ main {
     color: white;
     display: grid;
     grid-template-columns: 600px 1500px;
-    grid-template-rows: 420px 420px 420px 420px 200px;
+    grid-template-rows: auto auto auto auto;
     gap: 50px;
     position: relative;
     left: 398px;
@@ -22,7 +22,6 @@ body {
 img#Kirk {
     grid-row-start: 1;
     grid-row-end: 2;
-    grid-column: 1;
 }
 
 img#Ben {
@@ -64,7 +63,7 @@ div.container1 {
     grid-row: 2;
     top: 120px;
     animation: KirkGlow .5s forwards;
-    width: 600px;
+    width: 1000px;
     opacity: 30%;
     font-size: 30px;
 }
@@ -80,7 +79,7 @@ div.container1 {
 div.container2 {
     top: 120px;
     animation: BenGlow 2s forwards;
-    width: 600px;
+    width: 1000px;
     opacity: 30%;
     font-size: 30px;
 }
@@ -96,7 +95,7 @@ div.container2 {
 div.container3 {
     top: 120px;
     animation: KevinGlow 2s forwards;
-    width: 600px;
+    width: 1000px;
     opacity: 30%;
     font-size: 30px;
 }
@@ -112,7 +111,7 @@ div.container3 {
 div.container4 {
     top: 120px;
     animation: JustinGlow 2s forwards;
-    width: 600px;
+    width: 1000px;
     opacity: 30%;
     font-size: 30px;
 }
@@ -126,12 +125,12 @@ div.container4 {
 }
 
 main {
-    width: 1400px;
+    width: 1800px;
     border: 2px;
     border-color: aliceblue;
     box-sizing: border-box;
     box-shadow: 0 20px 50px whitesmoke;
     padding: 20px;
     color: white;
-    height: 1870px;
+    height: 2500px;
 }
