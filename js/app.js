@@ -46,6 +46,8 @@ function handleKeyPress(event) {
       snakeGame.setData();
       snakeGame.newGame();
       state = 'snake';
+    } else if (key === 'escape') {
+      state = 'menu';
     }
     break;
   case 'paused':
@@ -56,7 +58,7 @@ function handleKeyPress(event) {
     }
     break;
   case 'snake':
-    if (key === 'p') {
+    if (key === 'p' || key === 'escape') {
       state = 'paused';
     } else {
       for (let i = 0; i < snakeGame.allowedKeys.length; i++) {
@@ -120,8 +122,8 @@ function drawSnakeDirections() {
   ctx.fillStyle = '#99932e';
   ctx.fillText('Snake', 125, 100);
   ctx.font = '70px kenney';
-  ctx.fillText('MOVE WITH WASD OR ARROWS.', 15, 300);
-  ctx.fillText('SPACEBAR TO CONTINUE.', 60, 350);
+  ctx.fillText('MOVE WITH WASD OR ARROWS', 10, 300);
+  ctx.fillText('SPACEBAR TO CONTINUE', 60, 350);
 }
 
 function drawPauseMenu() {
@@ -131,10 +133,10 @@ function drawPauseMenu() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.font = 'bold 70px kenney-thick';
   ctx.fillStyle = snakeGame.textColor;
-  ctx.fillText('PAUSED', 240, 100);
-  ctx.font = '40px kenney';
-  ctx.fillText('PRESS SPACEBAR TO CONTINUE.', 0, 200);
-  ctx.fillText('PRESS ESC TO QUIT.', 0, 300);
+  ctx.fillText('PAUSED', 90, 100);
+  ctx.font = '70px kenney';
+  ctx.fillText('SPACEBAR TO CONTINUE', 60, 300);
+  ctx.fillText('ESC TO QUIT', 165, 350);
 }
 function drawYesHighScore() {
   canvas.width = 600;
@@ -175,7 +177,7 @@ function drawNoHighScore() {
   ctx.fillText('Game', 165, 100);
   ctx.fillText('Over', 165, 180);
   ctx.font = '70px kenney';
-  ctx.fillText('SPACEBAR TO CONTINUE.', 60, 350);
+  ctx.fillText('SPACEBAR TO CONTINUE', 60, 350);
 }
 
 
@@ -246,6 +248,7 @@ function appLoop(timestamp) {
       // do modal popup and adjust highscore list in localstorage
       state = 'highScore';
       let sound = new Audio('../audio/new-highscore.ogg');
+      sound.volume = 0.30;
       setTimeout(function () {
         sound.play();
       }, 1000);

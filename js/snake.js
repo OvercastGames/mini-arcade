@@ -38,24 +38,6 @@ snakeGame.continueGame = function () {
   setTimeout(gameLoop, snakeGame.timeout);
 };
 
-
-
-snakeGame.showIntro = function () {
-  ctx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
-  //draw text
-  ctx.fillStyle = 'black';
-  ctx.fillRect(0, 0, menuCanvas.width, menuCanvas.height);
-  ctx.font = 'bold 70px monospace';
-  ctx.fillStyle = 'green';
-  ctx.fillText('snake', 240, 100);
-  ctx.font = '40px monospace';
-  ctx.fillText('Press spacebar to begin.', 0, 300);
-  ctx.fillText('W A S D or arrow keys to move', 0, 400);
-
-};
-
-
-
 function SnakeSegment(context, x, y, vx, vy, height, width, color) {
   GameObject.call(this, context, x, y, vx, vy);
   this.height = height;
@@ -148,14 +130,11 @@ SnakeFood.prototype.draw = function () {
 
 };
 
-
 function drawScoreToScreen() {
 
   snakeGame.context.fillStyle = '#00000077';
-  snakeGame.context.font = 'bold 80px monospace';
-  snakeGame.context.fillText(snakeGame.score, 20, 70);
-  snakeGame.context.strokeStyle = '#ffffff77';
-  snakeGame.context.strokeText(snakeGame.score, 20, 70);
+  snakeGame.context.font = 'bold 50px kenney-thick';
+  snakeGame.context.fillText(snakeGame.score, 20, 65);
 }
 
 SnakeFood.prototype.update = function () {
@@ -229,6 +208,7 @@ function checkCollisions() {
   if (head.x < 0 || head.x + snakeGame.squareSize > snakeGame.canvas.width || head.y < 0 || head.y + snakeGame.squareSize > snakeGame.canvas.height) {
     state = 'gameOver';
     let sound = new Audio('../audio/death.wav');
+    sound.volume = 0.5;
     sound.play();
   }
   // Add new segment
@@ -246,6 +226,7 @@ function checkCollisions() {
         b.collision = true;
         state = 'gameOver';
         let sound = new Audio('../audio/death.wav');
+        sound.volume = 0.5;
         sound.play();
       }
     }
@@ -289,6 +270,7 @@ function drawAll() {
   if (snakeGame.allFood[0].collision) {
     if (!snakeGame.muted) {
       let sound = new Audio('../audio/pickup-food.wav');
+      sound.volume = 0.5;
       sound.play();
     }
     snakeGame.scoreDisplayBuffer = 1;
