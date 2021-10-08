@@ -8,24 +8,24 @@ let snakeGame = new Game(canvas, ctx, '#fff64d');
 let previousTimeStamp;
 let state = 'menu';
 let menuTextColor = '#187856';
-let kenneyThick = new FontFace('kenney-thick', 'url(../img/kenney-thick.ttf)');
+let kenneyThick = new FontFace('kenney-thick', 'url(./img/kenney-thick.ttf)');
 document.fonts.add(kenneyThick);
-let kenney = new FontFace('kenney', 'url(../img/kenney.ttf)');
+let kenney = new FontFace('kenney', 'url(./img/kenney.ttf)');
 document.fonts.add(kenney);
 
 //loading all the joystick images
 joystickCanvas.width = 400;
 joystickCanvas.height = 213;
 let upImg = new Image();
-upImg.src = '../img/joystickup.png';
+upImg.src = './img/joystickup.png';
 let downImg = new Image();
-downImg.src = '../img/joystickdown.png';
+downImg.src = './img/joystickdown.png';
 let leftImg = new Image();
-leftImg.src = '../img/joystickleft.png';
+leftImg.src = './img/joystickleft.png';
 let rightImg = new Image();
-rightImg.src = '../img/joystickright.png';
+rightImg.src = './img/joystickright.png';
 let normalImg = new Image();
-normalImg.src = '../img/joysticknormal.png';
+normalImg.src = './img/joysticknormal.png';
 joystickCtx.drawImage(normalImg, 400, 100);
 
 
@@ -57,88 +57,88 @@ function handleKeyPress(event) {
     event.preventDefault();
   }
   switch (state) {
-  case 'menu':
-    if (key === '1') state = 'directions';
-    break;
-  case 'directions':
-    if (key === ' ') {
-      snakeGame.setData();
-      snakeGame.newGame();
-      state = 'snake';
-    } else if (key === 'escape') {
-      state = 'menu';
-    }
-    break;
-  case 'paused':
-    if (key === 'escape') {
-      state = 'menu';
-    } else if (key === 'p' || key === ' ') {
-      state = 'snake';
-    }
-    break;
-  case 'snake':
-    if (key === 'p' || key === 'escape') {
-      state = 'paused';
-    } else {
-      for (let i = 0; i < snakeGame.allowedKeys.length; i++) {
-        if (key === snakeGame.allowedKeys[i]) {
-          snakeGame.activeKey = key;
+    case 'menu':
+      if (key === '1') state = 'directions';
+      break;
+    case 'directions':
+      if (key === ' ') {
+        snakeGame.setData();
+        snakeGame.newGame();
+        state = 'snake';
+      } else if (key === 'escape') {
+        state = 'menu';
+      }
+      break;
+    case 'paused':
+      if (key === 'escape') {
+        state = 'menu';
+      } else if (key === 'p' || key === ' ') {
+        state = 'snake';
+      }
+      break;
+    case 'snake':
+      if (key === 'p' || key === 'escape') {
+        state = 'paused';
+      } else {
+        for (let i = 0; i < snakeGame.allowedKeys.length; i++) {
+          if (key === snakeGame.allowedKeys[i]) {
+            snakeGame.activeKey = key;
+          }
         }
       }
-    }
-    break;
-  case 'highScore':
-    if (snakeGame.initials.length < 3 && isValidLetter(key)) {
-      snakeGame.initials += key.toUpperCase();
-    } else {
-      if (key === 'enter') {
-        setNewHighScore(snakeGame.initials, snakeGame.score);
-        state = 'showHighScore';
+      break;
+    case 'highScore':
+      if (snakeGame.initials.length < 3 && isValidLetter(key)) {
+        snakeGame.initials += key.toUpperCase();
+      } else {
+        if (key === 'enter') {
+          setNewHighScore(snakeGame.initials, snakeGame.score);
+          state = 'showHighScore';
+        }
       }
-    }
-    break;
-  case 'showHighScore':
-    if (key === ' ') state = 'menu';
-    break;
-  case 'noHighScore':
-    if (key === ' ') state = 'directions';
-    if (key === 'escape') state = 'menu';
-    break;
-  default:
-    break;
+      break;
+    case 'showHighScore':
+      if (key === ' ') state = 'menu';
+      break;
+    case 'noHighScore':
+      if (key === ' ') state = 'directions';
+      if (key === 'escape') state = 'menu';
+      break;
+    default:
+      break;
   }
 }
 
 function drawJoystick(key) {
   joystickCtx.clearRect(0, 0, joystickCanvas.width, joystickCanvas.height);
   switch (key) {
-  case 'arrowup':
-    joystickCtx.drawImage(upImg, 0, 0);
-    break;
-  case 'arrowdown':
-    joystickCtx.drawImage(downImg, 0, 0);
-    break;
-  case 'arrowleft':
-    joystickCtx.drawImage(leftImg, 0, 0);
-    break;
-  case 'arrowright':
-    joystickCtx.drawImage(rightImg, 0, 0);
-    break;
-  case 'w':
-    joystickCtx.drawImage(upImg, 0, 0);
-    break;
-  case 's':
-    joystickCtx.drawImage(downImg, 0, 0);
-    break;
-  case 'a':
-    joystickCtx.drawImage(leftImg, 0, 0);
-    break;
-  case 'd':
-    joystickCtx.drawImage(rightImg, 0, 0);
-    break;
-  default:
-    joystickCtx.drawImage(normalImg, 0, 0);
-    break;
+    case 'arrowup':
+      joystickCtx.drawImage(upImg, 0, 0);
+      break;
+    case 'arrowdown':
+      joystickCtx.drawImage(downImg, 0, 0);
+      break;
+    case 'arrowleft':
+      joystickCtx.drawImage(leftImg, 0, 0);
+      break;
+    case 'arrowright':
+      joystickCtx.drawImage(rightImg, 0, 0);
+      break;
+    case 'w':
+      joystickCtx.drawImage(upImg, 0, 0);
+      break;
+    case 's':
+      joystickCtx.drawImage(downImg, 0, 0);
+      break;
+    case 'a':
+      joystickCtx.drawImage(leftImg, 0, 0);
+      break;
+    case 'd':
+      joystickCtx.drawImage(rightImg, 0, 0);
+      break;
+    default:
+      joystickCtx.drawImage(normalImg, 0, 0);
+      break;
   }
 }
 
@@ -277,64 +277,64 @@ function appLoop(timestamp) {
   }
 
   switch (state) {
-  case 'menu':
-    drawMainMenu();
-    previousTimeStamp = timestamp;
-    window.requestAnimationFrame(appLoop);
-    break;
-  case 'snake':
-    previousTimeStamp = timestamp;
-    setTimeout(function () {
-      gameLoop();
-      requestAnimationFrame(appLoop);
-    }, 1000 / 5);
-    break;
-  case 'directions':
-    drawSnakeDirections();
-    previousTimeStamp = timestamp;
-    window.requestAnimationFrame(appLoop);
-    break;
-  case 'paused':
-    drawPauseMenu();
-    previousTimeStamp = timestamp;
-    window.requestAnimationFrame(appLoop);
-    break;
-  case 'gameOver':
-    if (isNewHighScore(snakeGame.score)) {
-      // do modal popup and adjust highscore list in localstorage
-      state = 'highScore';
-      let sound = new Audio('../audio/new-highscore.ogg');
-      sound.volume = 0.30;
+    case 'menu':
+      drawMainMenu();
+      previousTimeStamp = timestamp;
+      window.requestAnimationFrame(appLoop);
+      break;
+    case 'snake':
+      previousTimeStamp = timestamp;
       setTimeout(function () {
-        sound.play();
-      }, 1000);
+        gameLoop();
+        requestAnimationFrame(appLoop);
+      }, 1000 / 5);
+      break;
+    case 'directions':
+      drawSnakeDirections();
       previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
-    } else {
+      break;
+    case 'paused':
+      drawPauseMenu();
+      previousTimeStamp = timestamp;
+      window.requestAnimationFrame(appLoop);
+      break;
+    case 'gameOver':
+      if (isNewHighScore(snakeGame.score)) {
+        // do modal popup and adjust highscore list in localstorage
+        state = 'highScore';
+        let sound = new Audio('./audio/new-highscore.ogg');
+        sound.volume = 0.30;
+        setTimeout(function () {
+          sound.play();
+        }, 1000);
+        previousTimeStamp = timestamp;
+        window.requestAnimationFrame(appLoop);
+      } else {
 
-      state = 'noHighScore';
+        state = 'noHighScore';
+        previousTimeStamp = timestamp;
+        window.requestAnimationFrame(appLoop);
+      }
+      break;
+    case 'highScore':
+      drawYesHighScore();
       previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
-    }
-    break;
-  case 'highScore':
-    drawYesHighScore();
-    previousTimeStamp = timestamp;
-    window.requestAnimationFrame(appLoop);
-    break;
-  case 'noHighScore':
-    drawNoHighScore();
-    previousTimeStamp = timestamp;
-    window.requestAnimationFrame(appLoop);
-    break;
-  case 'showHighScore':
-    drawHightScoreList();
-    previousTimeStamp = timestamp;
-    window.requestAnimationFrame(appLoop);
-    break;
-  default:
-    previousTimeStamp = timestamp;
-    window.requestAnimationFrame(appLoop);
+      break;
+    case 'noHighScore':
+      drawNoHighScore();
+      previousTimeStamp = timestamp;
+      window.requestAnimationFrame(appLoop);
+      break;
+    case 'showHighScore':
+      drawHightScoreList();
+      previousTimeStamp = timestamp;
+      window.requestAnimationFrame(appLoop);
+      break;
+    default:
+      previousTimeStamp = timestamp;
+      window.requestAnimationFrame(appLoop);
 
   }
 }
