@@ -1,11 +1,7 @@
 function gameLoop() {
-  // Function that does all the updating (snake update food update)
-  //console.log(snakeGame.allSegments[0].x, snakeGame.allSegments[0].y);
   updateAll();
   checkCollisions();
-  // Function to clear screen
-  ctx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
-  // Looping backwards through snakesegments and not including the head = [0]
+  snakeGame.context.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
   drawAll();
 }
 
@@ -23,8 +19,10 @@ snakeGame.setData = function () {
   snakeGame.allFood = [];
   snakeGame.score = 0;
   snakeGame.initials = '';
-  snakeGame.segmentColor = 'green';
+  snakeGame.segmentColor = 'linear-gradient(#74f330, #000000)';
   snakeGame.foodColor = 'red';
+  snakeGame.scoreDisplayBuffer = 0;
+  snakeGame.muted = false;
 };
 
 snakeGame.newGame = function () {
@@ -39,24 +37,6 @@ snakeGame.newGame = function () {
 snakeGame.continueGame = function () {
   setTimeout(gameLoop, snakeGame.timeout);
 };
-
-
-
-snakeGame.showIntro = function () {
-  ctx.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
-  //draw text
-  ctx.fillStyle = 'black';
-  ctx.fillRect(0, 0, menuCanvas.width, menuCanvas.height);
-  ctx.font = 'bold 70px monospace';
-  ctx.fillStyle = 'green';
-  ctx.fillText('snake', 240, 100);
-  ctx.font = '40px monospace';
-  ctx.fillText('Press spacebar to begin.', 0, 300);
-  ctx.fillText('W A S D or arrow keys to move', 0, 400);
-
-};
-
-
 
 function SnakeSegment(context, x, y, vx, vy, height, width, color) {
   GameObject.call(this, context, x, y, vx, vy);
@@ -83,13 +63,18 @@ SnakeSegment.prototype.add = function () {
 
 SnakeSegment.prototype.draw = function () {
   // How a snake segment is shown on the screen
+  let grd = snakeGame.context.createLinearGradient(0, 0, 600, 0);
+  grd.addColorStop(.0, '#f33074');
+  grd.addColorStop(.33, '#fff64d');
+  grd.addColorStop(.66, '#30f0af');
+  grd.addColorStop(1, '#6cdef6');
   let padding = (snakeGame.squareSize - this.width) / 2;
   if (this.collision) {
     this.context.fillStyle = 'yellow';
   } else {
-    this.context.fillStyle = 'green';
+    this.context.fillStyle = grd;
   }
-  this.context.fillRect(this.x, this.y, this.height, this.width);
+  this.context.fillRect(this.x + padding, this.y + padding, this.height, this.width);
 
 };
 
@@ -137,13 +122,20 @@ function SnakeFood(context, x, y, vx, vy, height, width, color) {
 
 SnakeFood.prototype.draw = function () {
   let padding = (snakeGame.squareSize - this.width) / 2;
-  if (this.collision) {
-    this.context.fillStyle = 'orange';
-  } else {
-    this.context.fillStyle = 'red';
-  }
-  this.context.fillRect(this.x, this.y, this.height, this.width);
+  this.context.lineWidth = 5;
+  this.context.strokeStyle = 'white';
+  this.context.fillStyle = '#f33074';
+  this.context.fillRect(this.x + padding, this.y + padding, this.height, this.width);
+  this.context.strokeRect(this.x + padding, this.y + padding, this.height, this.width);
+
 };
+
+function drawScoreToScreen() {
+
+  snakeGame.context.fillStyle = '#00000077';
+  snakeGame.context.font = 'bold 50px kenney-thick';
+  snakeGame.context.fillText(snakeGame.score, 20, 65);
+}
 
 SnakeFood.prototype.update = function () {
   if (this.collision) {
@@ -180,10 +172,10 @@ function drawGameBoard() {
   for (let rows = 0; rows < snakeGame.numRows; rows++) {
     for (let columns = 0; columns < snakeGame.numColumns; columns++) {
       if ((isOdd(rows) && isEven(columns)) || ((isEven(rows) && isOdd(columns)))) {
-        ctx.fillStyle = '#c0eb5d';
+        ctx.fillStyle = '#fddde8';
         //ctx.fillStyle = '#4168AB';
       } else {
-        ctx.fillStyle = '#ccef7d';
+        ctx.fillStyle = '#fbbad1';
         //ctx.fillStyle = '#3D4B75';
       }
       ctx.beginPath();
@@ -215,11 +207,13 @@ function checkCollisions() {
   // outside game board
   if (head.x < 0 || head.x + snakeGame.squareSize > snakeGame.canvas.width || head.y < 0 || head.y + snakeGame.squareSize > snakeGame.canvas.height) {
     state = 'gameOver';
+    let sound = new Audio('../audio/death.wav');
+    sound.volume = 0.5;
+    sound.play();
   }
   // Add new segment
   if (foodHead.collision) {
     snakeGame.score += 100;
-    console.log(snakeGame.score);
     snakeGame.allSegments[snakeGame.allSegments.length - 1].add();
   }
 
@@ -231,6 +225,9 @@ function checkCollisions() {
         a.collision = true;
         b.collision = true;
         state = 'gameOver';
+        let sound = new Audio('../audio/death.wav');
+        sound.volume = 0.5;
+        sound.play();
       }
     }
   }
@@ -257,6 +254,7 @@ function updateAll() {
     snakeGame.allFood[i].update();
   }
   snakeGame.allSegments[0].update();
+
 }
 
 function drawAll() {
@@ -267,6 +265,21 @@ function drawAll() {
   }
   for (let i = 0; i < snakeGame.allFood.length; i++) {
     snakeGame.allFood[i].draw();
+  }
+
+  if (snakeGame.allFood[0].collision) {
+    if (!snakeGame.muted) {
+      let sound = new Audio('../audio/pickup-food.wav');
+      sound.volume = 0.5;
+      sound.play();
+    }
+    snakeGame.scoreDisplayBuffer = 1;
+    drawScoreToScreen();
+  } else if (snakeGame.scoreDisplayBuffer > 0 && snakeGame.scoreDisplayBuffer < 4) {
+    drawScoreToScreen();
+    snakeGame.scoreDisplayBuffer++;
+  } else {
+    snakeGame.scoreDisplayBuffer = 0;
   }
 }
 

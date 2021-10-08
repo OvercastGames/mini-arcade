@@ -59,7 +59,8 @@ main {
     resize: both;
 }
 
-canvas#snake, canvas#menu {
+
+canvas#snake {
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 3;
@@ -70,6 +71,17 @@ canvas#snake, canvas#menu {
     z-index: -1;
 }
 
+canvas#joystick{
+  background-color: transparent;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 5;
+    grid-row-end:  6;
+    position: relative;
+    left: 535px;
+    top: 0px;
+    z-index: 9;
+}
 #cabinetimage {
     position: relative;
     left: 440px;
@@ -93,12 +105,12 @@ footer {
     top: 750px;
     left: 840px;
 }
-canvas#menu {
-    height: 125px;
-    width: 900px;
-    position: relative;
-    left: 580px;
-    bottom: 1165px;
-    background-color: transparent;
-    z-index: 0;
-}
+/*canvas#joystick {*/
+    /*height: 125px;*/
+    /*width: 900px;*/
+    /*position: relative;*/
+    /*left: 580px;*/
+    /*bottom: 1165px;*/
+    /*background-color: transparent;*/
+    /*z-index: 0;*/
+/*}*/
