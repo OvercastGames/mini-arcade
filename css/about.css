@@ -12,11 +12,11 @@ main {
 }
 
 navbar {
-    background-image: url("./img/black-space-with-lot-stars-2469662.jpg");
+    background-image: url("../img/black-space-with-lot-stars-2469662.jpg");
 }
 
 body {
-    background-image: url('./img/retro-tile-background.jpg');
+    background-image: url('../img/retro-tile-background.jpg');
 }
 
 img#Kirk {
