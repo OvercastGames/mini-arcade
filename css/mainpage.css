@@ -1,7 +1,6 @@
 body {
     background-image: url("/img/retro-tile-background.jpg");
     background-color: #cccccc;
-    min-width: 1200px;
     margin: auto;
     max-width: 80vw;
     max-height: 80vh;
@@ -52,39 +51,31 @@ div.About {
 
 main {
     display:grid;
-    grid-template-columns: 300px 1500px 300px;
+    grid-template-columns: 1fr;
     grid-template-rows: 200px 250px 250px 250px 200px;
     text-align: center;
-    min-width: 2100px;
-    resize: both;
+    justify-items: center;
 }
 
 
 canvas#snake {
-    grid-column-start: 2;
-    grid-column-end: 3;
     grid-row-start: 3;
     grid-row-end:  4;
-    position:relative;
-    left: 435px;
-    bottom: -48px;
     z-index: -1;
+    padding-left: 50px;
+    padding-top: 50px;
 }
 
 canvas#joystick{
   background-color: transparent;
-    grid-column-start: 2;
-    grid-column-end: 3;
     grid-row-start: 5;
     grid-row-end:  6;
     position: relative;
-    left: 535px;
-    top: 0px;
+    padding-left: 50px;
     z-index: 9;
 }
 #cabinetimage {
     position: relative;
-    left: 440px;
     resize: both;
 }
 
@@ -92,8 +83,6 @@ canvas#joystick{
     background-color: black;
     height: 900px;
     width: 947px;
-    position: relative;
-    left: 260px;
     top: 400px;
     z-index: -1;
 }
@@ -102,15 +91,7 @@ footer {
     font-size: 40px;
     color: white;
     position: relative;
+    max-width: 500px;
     top: 750px;
     left: 840px;
 }
-/*canvas#joystick {*/
-    /*height: 125px;*/
-    /*width: 900px;*/
-    /*position: relative;*/
-    /*left: 580px;*/
-    /*bottom: 1165px;*/
-    /*background-color: transparent;*/
-    /*z-index: 0;*/
-/*}*/
