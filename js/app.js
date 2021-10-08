@@ -8,24 +8,24 @@ let snakeGame = new Game(canvas, ctx, '#fff64d');
 let previousTimeStamp;
 let state = 'menu';
 let menuTextColor = '#187856';
-let kenneyThick = new FontFace('kenney-thick', 'url(/img/kenney-thick.ttf)');
+let kenneyThick = new FontFace('kenney-thick', 'url(./img/kenney-thick.ttf)');
 document.fonts.add(kenneyThick);
-let kenney = new FontFace('kenney', 'url(/img/kenney.ttf)');
+let kenney = new FontFace('kenney', 'url(./img/kenney.ttf)');
 document.fonts.add(kenney);
 
 //loading all the joystick images
 joystickCanvas.width = 400;
 joystickCanvas.height = 213;
 let upImg = new Image();
-upImg.src = '/img/joystickup.png';
+upImg.src = './img/joystickup.png';
 let downImg = new Image();
-downImg.src = '/img/joystickdown.png';
+downImg.src = './img/joystickdown.png';
 let leftImg = new Image();
-leftImg.src = '/img/joystickleft.png';
+leftImg.src = './img/joystickleft.png';
 let rightImg = new Image();
-rightImg.src = '/img/joystickright.png';
+rightImg.src = './img/joystickright.png';
 let normalImg = new Image();
-normalImg.src = '/img/joysticknormal.png';
+normalImg.src = './img/joysticknormal.png';
 joystickCtx.drawImage(normalImg, 400, 100);
 
 
@@ -303,7 +303,7 @@ function appLoop(timestamp) {
       if (isNewHighScore(snakeGame.score)) {
         // do modal popup and adjust highscore list in localstorage
         state = 'highScore';
-        let sound = new Audio('/audio/new-highscore.ogg');
+        let sound = new Audio('./audio/new-highscore.ogg');
         sound.volume = 0.30;
         setTimeout(function () {
           sound.play();
