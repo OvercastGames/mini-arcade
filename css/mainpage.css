@@ -1,0 +1,97 @@
+body {
+    background-image: url("/img/retro-tile-background.jpg");
+    background-color: #cccccc;
+    margin: auto;
+    max-width: 80vw;
+    max-height: 80vh;
+}
+
+navbar {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    grid-template-rows: 130px;
+    background-image: url("/img/black-space-with-lot-stars-2469662.jpg");
+}
+
+img#navimg {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    width: 200px;
+    height: 150px;
+}
+
+div.Home {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    text-align:center;
+    margin-top: 50px;
+    font-size: 50px;
+}
+
+div.Score {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row: 1;
+    text-align: center;
+    margin-top: 50px;
+    font-size: 50px;
+}
+
+div.About {
+    grid-column-start: 4;
+    grid-column-end: 5;
+    grid-row: 1;
+    text-align: center;
+    margin-top: 50px;
+    font-size: 50px;
+}
+
+main {
+    display:grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 200px 250px 250px 250px 200px;
+    text-align: center;
+    justify-items: center;
+}
+
+
+canvas#snake {
+    grid-row-start: 3;
+    grid-row-end:  4;
+    z-index: -1;
+    padding-left: 50px;
+    padding-top: 50px;
+}
+
+canvas#joystick{
+  background-color: transparent;
+    grid-row-start: 5;
+    grid-row-end:  6;
+    position: relative;
+    padding-left: 50px;
+    z-index: 9;
+}
+#cabinetimage {
+    position: relative;
+    resize: both;
+}
+
+#cabinetBackground {
+    background-color: black;
+    height: 900px;
+    width: 947px;
+    top: 400px;
+    z-index: -1;
+}
+
+footer {
+    font-size: 40px;
+    color: white;
+    position: relative;
+    max-width: 500px;
+    top: 750px;
+    left: 840px;
+}

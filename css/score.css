@@ -1,0 +1,110 @@
+footer {
+    text-align: center;
+    font-size: 30px;
+}
+
+section {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+    grid-template-rows: 450px;
+    position: relative;
+    border-style:outset;
+    border-color: #ccff15;
+    border-width: 10px;
+    text-align: center;
+    text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 0.2em yellow;
+    color:#ccff15;
+    background-color: rgba(0,0,0, 0.8);
+    text-align: center;
+    min-height: 625px;
+   
+}
+
+h1 {
+    text-shadow: 1px 1px 2px black, 0 0 1em yellow, 0 0 0.2em yellow;
+    color:#ccff15;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 50px;
+
+    animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+    to {
+        text-shadow: 0 5px 15px yellow;
+    }
+}
+
+h2 {
+    font-size: 50px;
+    border-style: solid;
+    animation: glow2 1.5s infinite alternate;
+}
+
+@keyframes glow2 {
+    to {
+        text-shadow: 0 5px 15px yellow;
+    }
+}
+
+#initialsBox {
+    position: relative;
+    left: 12px;
+}
+
+div#score {
+    grid-column-start: 5;
+    grid-column-end: auto;
+}
+
+#score-ol {
+    list-style: none; 
+    position: relative;
+    right: 22px;
+}
+
+div#initials {
+    grid-column-start: 2;
+}
+
+li {
+    font-size: 40px;
+    margin: 10px;
+}
+
+body {
+    background-image: url("/img/Collage.jpg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+
+footer {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.8);
+    text-align: center;
+    width: 100vw;
+    animation: glowfoot .5s infinite alternate;
+}
+
+@keyframes glowfoot {
+    to {
+        text-shadow: 0 5px 15px white
+    }    
+}
+
+section {
+    position: relative;
+    left: 250px;
+    width: 70vw;
+}
+
+main {
+    width: 70vw;
+}
+
+#highScore {
+    position: relative;
+    left: 280px;
+}

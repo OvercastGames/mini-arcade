@@ -1,0 +1,136 @@
+
+main {
+    padding-top: 50px;
+    background-color:black;
+    color: white;
+    display: grid;
+    grid-template-columns: 600px 1500px;
+    grid-template-rows: auto auto auto auto;
+    gap: 50px;
+    position: relative;
+    left: 398px;
+}
+
+navbar {
+    background-image: url("/img/black-space-with-lot-stars-2469662.jpg");
+}
+
+body {
+    background-image: url('/img/retro-tile-background.jpg');
+}
+
+img#Kirk {
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+img#Ben {
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column: 1;
+}
+
+img#Kevin {
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+img#Justin {
+    grid-row-start: 4;
+    grid-row-end: 5;
+}
+
+footer {
+    grid-column: 2;
+    text-align: center;
+    padding: 20px;
+    width: 290px;
+    height: 6px;
+    color: white;
+    position: relative;
+    left: 980px;
+    background-color: rgba(0, 0, 0, 0.7);
+    font-size: 30px;
+}
+
+footer {
+    position: relative;
+    bottom: 50px;
+}
+
+div.container1 {
+    grid-column: 2;
+    grid-row: 2;
+    top: 120px;
+    animation: KirkGlow .5s forwards;
+    width: 1000px;
+    opacity: 30%;
+    font-size: 30px;
+}
+
+@keyframes KirkGlow {
+    to {
+        text-shadow: 0 5px 10px white;
+        transition: ease-in-out 2s;
+        opacity: 100%;
+    }    
+}
+
+div.container2 {
+    top: 120px;
+    animation: BenGlow 2s forwards;
+    width: 1000px;
+    opacity: 30%;
+    font-size: 30px;
+}
+
+@keyframes BenGlow {
+    to {
+        text-shadow: 0 5px 15px red;
+        transition: ease-in-out 2s;
+        opacity: 100%;
+    }
+}
+
+div.container3 {
+    top: 120px;
+    animation: KevinGlow 2s forwards;
+    width: 1000px;
+    opacity: 30%;
+    font-size: 30px;
+}
+
+@keyframes KevinGlow {
+    to {
+        text-shadow: 0 5px 15px cyan;
+        transition: ease-in-out 2s;
+        opacity: 100%;
+    }
+}
+
+div.container4 {
+    top: 120px;
+    animation: JustinGlow 2s forwards;
+    width: 1000px;
+    opacity: 30%;
+    font-size: 30px;
+}
+
+@keyframes JustinGlow {
+    to {
+        text-shadow: 0 5px 15px yellow;
+        transition: ease-in-out 2s;
+        opacity: 100%;
+    }
+}
+
+main {
+    width: 1800px;
+    border: 2px;
+    border-color: aliceblue;
+    box-sizing: border-box;
+    box-shadow: 0 20px 50px whitesmoke;
+    padding: 20px;
+    color: white;
+    height: 2500px;
+}
