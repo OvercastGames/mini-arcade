@@ -1,19 +1,26 @@
 'use strict';
 
+// Main game is drawn on the '#snake' canvas
+// The joystick is on the '#joystick' canvas
 let canvas = document.getElementById('snake');
 let ctx = canvas.getContext('2d');
 let joystickCanvas = document.getElementById('joystick');
 let joystickCtx = joystickCanvas.getContext('2d');
+
+// Create a Game
 let snakeGame = new Game(canvas, ctx, '#fff64d');
+
 let previousTimeStamp;
 let state = 'menu';
-let menuTextColor = '#187856';
+
+
+// Declaring fonts
 let kenneyThick = new FontFace('kenney-thick', 'url(./img/kenney-thick.ttf)');
-document.fonts.add(kenneyThick);
 let kenney = new FontFace('kenney', 'url(./img/kenney.ttf)');
+document.fonts.add(kenneyThick);
 document.fonts.add(kenney);
 
-//loading all the joystick images
+// Set up all the global joystick images
 joystickCanvas.width = 400;
 joystickCanvas.height = 213;
 let upImg = new Image();
@@ -31,12 +38,15 @@ joystickCtx.drawImage(normalImg, 400, 100);
 
 window.addEventListener('keydown', handleKeyPress);
 
+// Game constructor
 function Game(canvas, context, textColor) {
   this.canvas = canvas;
   this.context = context;
   this.textColor = textColor;
 }
 
+// Game Object constructor for all on sreen game objects
+// e.g. SnakeSegment and SnakeFood inherit from this.
 function GameObject(context, x, y, vx, vy) {
   this.context = context;
   this.x = x;
@@ -46,9 +56,11 @@ function GameObject(context, x, y, vx, vy) {
   this.collision = false;
 }
 
+// Logic to control global keypresses for switching states
 function handleKeyPress(event) {
   let key = event.key.toLowerCase();
   drawJoystick(key);
+  // stops browser scroll
   if (key === 'arrowup' ||
     key === 'arrowdown' ||
     key === 'arrowleft' ||
@@ -80,6 +92,7 @@ function handleKeyPress(event) {
       if (key === 'p' || key === 'escape') {
         state = 'paused';
       } else {
+        // limits the keys that can be the snakeGame.activeKey
         for (let i = 0; i < snakeGame.allowedKeys.length; i++) {
           if (key === snakeGame.allowedKeys[i]) {
             snakeGame.activeKey = key;
@@ -87,6 +100,7 @@ function handleKeyPress(event) {
         }
       }
       break;
+    // a little extra logic here for initials
     case 'highScore':
       if (snakeGame.initials.length < 3 && isValidLetter(key)) {
         snakeGame.initials += key.toUpperCase();
@@ -109,6 +123,9 @@ function handleKeyPress(event) {
   }
 }
 
+// Swaps the image for the joystick depending on the key
+// this function is called inside the global handleKeyPress
+// and takes a tolowercase(ed) event.key as a parameter
 function drawJoystick(key) {
   joystickCtx.clearRect(0, 0, joystickCanvas.width, joystickCanvas.height);
   switch (key) {
@@ -142,6 +159,7 @@ function drawJoystick(key) {
   }
 }
 
+// Limits the highscore to only alpha
 function isValidLetter(letter) {
   let valid = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
   if (valid.includes(letter.toUpperCase())) {
@@ -150,14 +168,14 @@ function isValidLetter(letter) {
   return false;
 }
 
+// Drawing functions for static text on background color screens
 function drawMainMenu() {
-
   canvas.width = 600;
   canvas.height = 440;
   ctx.fillStyle = '#30f0af';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.font = 'bold 70px kenney-thick';
-  ctx.fillStyle = menuTextColor;
+  ctx.fillStyle = '#187856';
   ctx.fillText('Mini', 175, 100);
   ctx.fillText('Arcade', 100, 180);
   ctx.font = '70px kenney';
@@ -232,14 +250,13 @@ function drawNoHighScore() {
   ctx.fillText('SPACEBAR TO CONTINUE', 60, 350);
 }
 
-
+// Lil helper functions for getting even/odd
 function isOdd(num) {
   if (num % 2 !== 0) {
     return true;
   }
   return false;
 }
-
 function isEven(num) {
   if (num % 2 === 0) {
     return true;
@@ -247,6 +264,7 @@ function isEven(num) {
   return false;
 }
 
+// Returns true if points is higher than any of the entries in HighScore.all
 function isNewHighScore(points) {
   for (let i = 0; i < HighScore.all.length; i++) {
     if (points > HighScore.all[i].score) {
@@ -256,6 +274,7 @@ function isNewHighScore(points) {
   return false;
 }
 
+// Saves a highscore to localstorage
 function setNewHighScore(newInitial, newScore) {
   for (let i = 0; i < HighScore.all.length; i++) {
     if (newScore > HighScore.all[i].score) {
@@ -267,6 +286,8 @@ function setNewHighScore(newInitial, newScore) {
   }
 }
 
+// This is the main loop of the with a switch on states
+// controlled by keyboard events in handleKeyPress()
 function appLoop(timestamp) {
   if (!previousTimeStamp) {
     previousTimeStamp = timestamp;
@@ -276,14 +297,14 @@ function appLoop(timestamp) {
     joystickCtx.drawImage(normalImg, 0, 0);
   }
 
+  previousTimeStamp = timestamp;
+
   switch (state) {
     case 'menu':
       drawMainMenu();
-      previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
       break;
     case 'snake':
-      previousTimeStamp = timestamp;
       setTimeout(function () {
         gameLoop();
         requestAnimationFrame(appLoop);
@@ -291,54 +312,45 @@ function appLoop(timestamp) {
       break;
     case 'directions':
       drawSnakeDirections();
-      previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
       break;
     case 'paused':
       drawPauseMenu();
-      previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
       break;
     case 'gameOver':
       if (isNewHighScore(snakeGame.score)) {
-        // do modal popup and adjust highscore list in localstorage
         state = 'highScore';
         let sound = new Audio('./audio/new-highscore.ogg');
         sound.volume = 0.30;
+        // Adds a delay to the highScore so it doesn't play over the death sound.
         setTimeout(function () {
           sound.play();
         }, 1000);
-        previousTimeStamp = timestamp;
         window.requestAnimationFrame(appLoop);
       } else {
-
         state = 'noHighScore';
-        previousTimeStamp = timestamp;
         window.requestAnimationFrame(appLoop);
       }
       break;
     case 'highScore':
       drawYesHighScore();
-      previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
       break;
     case 'noHighScore':
       drawNoHighScore();
-      previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
       break;
     case 'showHighScore':
       drawHightScoreList();
-      previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
       break;
     default:
-      previousTimeStamp = timestamp;
       window.requestAnimationFrame(appLoop);
-
   }
 }
 
-
+// Starts appLoop as soon as the joystick image is loaded.
+// This is the entry point into the game loop
 normalImg.onload = window.requestAnimationFrame(appLoop);
 
