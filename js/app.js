@@ -113,6 +113,8 @@ function handleKeyPress(event) {
       break;
     case 'showHighScore':
       if (key === ' ') state = 'menu';
+      if (key === 'enter') state = 'menu';
+      if (key === 'escape') state = 'menu';
       break;
     case 'noHighScore':
       if (key === ' ') state = 'directions';
