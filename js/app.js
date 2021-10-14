@@ -2,7 +2,7 @@
 
 // Main game is drawn on the '#snake' canvas
 // The joystick is on the '#joystick' canvas
-let canvas = document.getElementById('snake');
+let canvas = document.getElementById('game');
 let ctx = canvas.getContext('2d');
 let joystickCanvas = document.getElementById('joystick');
 let joystickCtx = joystickCanvas.getContext('2d');
@@ -58,39 +58,39 @@ function GameObject(context, x, y, vx, vy) {
 
 // Logic to control global keypresses for switching states
 function handleKeyPress(event) {
-  let key = event.key.toLowerCase();
+  let key = event.key;
   drawJoystick(key);
   // stops browser scroll
-  if (key === 'arrowup' ||
-    key === 'arrowdown' ||
-    key === 'arrowleft' ||
-    key === 'arrowright' ||
-    key === ' ') {
+  if (key === keyPresses.ARROW_UP ||
+    key === keyPresses.ARROW_DOWN ||
+    key === keyPresses.ARROW_LEFT ||
+    key === keyPresses.ARROW_RIGHT ||
+    key === keyPresses.SPACE_BAR) {
     event.preventDefault();
   }
   switch (state) {
-    case 'menu':
-      if (key === '1') state = 'directions';
+    case gameStates.MENU:
+      if (key === '1') state = gameStates.DIRECTIONS;
       break;
-    case 'directions':
-      if (key === ' ') {
+    case gameStates.DIRECTIONS:
+      if (key === keyPresses.SPACE_BAR) {
         snakeGame.setData();
         snakeGame.newGame();
-        state = 'snake';
-      } else if (key === 'escape') {
-        state = 'menu';
+        state = gameStates.SNAKE;
+      } else if (key === keyPresses.ESCAPE) {
+        state = keyPresses.MENU;
       }
       break;
-    case 'paused':
-      if (key === 'escape') {
-        state = 'menu';
-      } else if (key === 'p' || key === ' ') {
-        state = 'snake';
+    case gameStates.PAUSED:
+      if (key === keyPresses.ESCAPE) {
+        state = gameStates.MENU;
+      } else if (key === keyPresses.P || key === keyPresses.SPACE_BAR) {
+        state = gameStates.SNAKE;
       }
       break;
-    case 'snake':
-      if (key === 'p' || key === 'escape') {
-        state = 'paused';
+    case gameStates.SNAKE:
+      if (key === keyPresses.P || key === keyPresses.ESCAPE) {
+        state = gameStates.PAUSED;
       } else {
         // limits the keys that can be the snakeGame.activeKey
         for (let i = 0; i < snakeGame.allowedKeys.length; i++) {
@@ -101,24 +101,24 @@ function handleKeyPress(event) {
       }
       break;
     // a little extra logic here for initials
-    case 'highScore':
+    case gameStates.HIGH_SCORE:
       if (snakeGame.initials.length < 3 && isValidLetter(key)) {
         snakeGame.initials += key.toUpperCase();
       } else {
-        if (key === 'enter') {
+        if (key === keyPresses.ENTER || key === keyPresses.ESCAPE || key === keyPresses.SPACE_BAR) {
           setNewHighScore(snakeGame.initials, snakeGame.score);
-          state = 'showHighScore';
+          state = gameStates.SHOW_HIGH_SCORE;
         }
       }
       break;
-    case 'showHighScore':
-      if (key === ' ') state = 'menu';
-      if (key === 'enter') state = 'menu';
-      if (key === 'escape') state = 'menu';
+    case gameStates.SHOW_HIGH_SCORE:
+      if (key === keyPresses.ENTER || key === keyPresses.ESCAPE || key === keyPresses.SPACE_BAR) {
+        state = gameStates.MENU;
+      }
       break;
-    case 'noHighScore':
-      if (key === ' ') state = 'directions';
-      if (key === 'escape') state = 'menu';
+    case gameStates.NO_HIGH_SCORE:
+      if (key === keyPresses.SPACE_BAR) state = gameStates.DIRECTIONS;
+      if (key === keyPresses.ESCAPE) state = gameStates.MENU;
       break;
     default:
       break;
@@ -131,28 +131,28 @@ function handleKeyPress(event) {
 function drawJoystick(key) {
   joystickCtx.clearRect(0, 0, joystickCanvas.width, joystickCanvas.height);
   switch (key) {
-    case 'arrowup':
+    case keyPresses.ARROW_UP:
       joystickCtx.drawImage(upImg, 0, 0);
       break;
-    case 'arrowdown':
+    case keyPresses.ARROW_DOWN:
       joystickCtx.drawImage(downImg, 0, 0);
       break;
-    case 'arrowleft':
+    case keyPresses.ARROW_LEFT:
       joystickCtx.drawImage(leftImg, 0, 0);
       break;
-    case 'arrowright':
+    case keyPresses.ARROW_RIGHT:
       joystickCtx.drawImage(rightImg, 0, 0);
       break;
-    case 'w':
+    case keyPresses.W:
       joystickCtx.drawImage(upImg, 0, 0);
       break;
-    case 's':
+    case keyPresses.S:
       joystickCtx.drawImage(downImg, 0, 0);
       break;
-    case 'a':
+    case keyPresses.A:
       joystickCtx.drawImage(leftImg, 0, 0);
       break;
-    case 'd':
+    case keyPresses.D:
       joystickCtx.drawImage(rightImg, 0, 0);
       break;
     default:
@@ -308,7 +308,7 @@ function appLoop(timestamp) {
       break;
     case 'snake':
       setTimeout(function () {
-        gameLoop();
+        snakeGame.gameLoop();
         requestAnimationFrame(appLoop);
       }, 1000 / 5);
       break;

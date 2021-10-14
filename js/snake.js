@@ -1,5 +1,5 @@
 // The snakeGame game loop that gets called from appLoop when the state is 'snake'
-function gameLoop() {
+snakeGame.gameLoop = function () {
   updateAll();
   checkAllCollisions();
   snakeGame.context.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
