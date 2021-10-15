@@ -1,28 +1,45 @@
 'use strict';
 
-// Main game is drawn on the '#snake' canvas
-// The joystick is on the '#joystick' canvas
-let canvas = document.getElementById('game');
-let ctx = canvas.getContext('2d');
-let joystickCanvas = document.getElementById('joystick');
-let joystickCtx = joystickCanvas.getContext('2d');
-
-// Create a Game
-let snakeGame = new Game(canvas, ctx, '#fff64d');
-
-let previousTimeStamp;
-let state = 'menu';
-
-
-// Declaring fonts
-let kenneyThick = new FontFace('kenney-thick', 'url(./img/kenney-thick.ttf)');
-let kenney = new FontFace('kenney', 'url(./img/kenney.ttf)');
+const kenneyThick = new FontFace('kenney-thick', 'url(./img/kenney-thick.ttf)');
+const kenney = new FontFace('kenney', 'url(./img/kenney.ttf)');
 document.fonts.add(kenneyThick);
 document.fonts.add(kenney);
+window.addEventListener('keydown', handleKeyDown);
+window.addEventListener('keyup', handleKeyUp);
+
+function App() {
+  this.gameCanvas = document.getElementById('game');
+  this.gameCtx = this.gameCanvas.getContext('2d');
+  this.gameCanvas.width = 600;
+  this.gameCanvas.height = 440;
+  this.joystickCanvas = document.getElementById('joystick');
+  this.joystickCtx = this.joystickCanvas.getContext('2d');
+  this.joystickCanvas.width = 400;
+  this.joystickCanvas.height = 213;
+  this.previousTimeStamp = null;
+  this.state = gameStates.MENU;
+  this.menuBackgroundColor = '#30f0af';
+  this.menuTextColor = '#187856';
+  this.menuFontLarge = 'bold 70px kenney-thick';
+  this.menuFontSmall = '70px kenney';
+  this.drawMainMenu = function () {
+    this.gameCtx.fillStyle = this.menuBackgroundColor;
+    this.gameCtx.fillRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+    this.gameCtx.textAlign = 'center';
+    this.gameCtx.font = this.menuFontLarge;
+    this.gameCtx.fillStyle = this.menuTextColor;
+    this.gameCtx.fillText('Mini', this.gameCanvas.width / 2, 100);
+    this.gameCtx.fillText('Arcade', this.gameCanvas.width / 2, 180);
+    this.gameCtx.font = this.menuFontSmall;
+    this.gameCtx.fillText('PRESS 1 FOR SNAKE', this.gameCanvas.width / 2, 300);
+    this.gameCtx.fillText('PRESS 2 COMING SOON', this.gameCanvas.width / 2, 350);
+  };
+}
+
+const miniArcade = new App();
 
 // Set up all the global joystick images
-joystickCanvas.width = 400;
-joystickCanvas.height = 213;
+
 let upImg = new Image();
 upImg.src = './img/joystickup.png';
 let downImg = new Image();
@@ -33,16 +50,80 @@ let rightImg = new Image();
 rightImg.src = './img/joystickright.png';
 let normalImg = new Image();
 normalImg.src = './img/joysticknormal.png';
-joystickCtx.drawImage(normalImg, 400, 100);
+miniArcade.joystickCtx.drawImage(normalImg, miniArcade.joystickCanvas.width, miniArcade.joystickCanvas.height);
 
 
-window.addEventListener('keydown', handleKeyPress);
 
-// Game constructor
-function Game(canvas, context, textColor) {
-  this.canvas = canvas;
-  this.context = context;
-  this.textColor = textColor;
+function Game(title, directions, colors, validKeys, timeout) {
+  this.title = title;
+  this.directions = directions;
+  this.colors = colors;
+  this.validKeys = validKeys;
+  this.timeout = timeout;
+  this.score = 0;
+  this.initials = '';
+}
+
+Game.prototype.drawDirections = function () {
+  miniArcade.gameCtx.fillStyle = this.colors.backgroundColor;
+  miniArcade.gameCtx.fillRect(0, 0, miniArcade.gameCanvas.width, miniArcade.gameCanvas.height);
+  miniArcade.gameCtx.textAlign = 'center';
+  miniArcade.gameCtx.font = miniArcade.menuFontLarge;
+  miniArcade.gameCtx.fillStyle = this.colors.textColor;
+  miniArcade.gameCtx.fillText(this.title, miniArcade.gameCanvas.width / 2, 100);
+  miniArcade.gameCtx.font = miniArcade.menuFontSmall;
+  miniArcade.gameCtx.fillText(this.directions, miniArcade.gameCanvas.width / 2, 300);
+  miniArcade.gameCtx.fillText('SPACEBAR TO CONTINUE', miniArcade.gameCanvas.width / 2, 350);
+}
+
+Game.prototype.drawPauseMenu = function () {
+  miniArcade.gameCtx.fillStyle = this.colors.altBackgroundColor;
+  miniArcade.gameCtx.fillRect(0, 0, miniArcade.gameCanvas.width, miniArcade.gameCanvas.height);
+  miniArcade.gameCtx.textAlign = 'center';
+  miniArcade.gameCtx.font = miniArcade.menuFontLarge;
+  miniArcade.gameCtx.fillStyle = this.colors.textColor;
+  miniArcade.gameCtx.fillText('PAUSED', miniArcade.gameCanvas.width / 2, 100);
+  miniArcade.gameCtx.font = miniArcade.menuFontSmall;
+  miniArcade.gameCtx.fillText('SPACEBAR TO CONTINUE', miniArcade.gameCanvas.width / 2, 300);
+  miniArcade.gameCtx.fillText('ESC TO QUIT', miniArcade.gameCanvas.width / 2, 350);
+}
+Game.prototype.drawYesHighScore = function () {
+  miniArcade.gameCtx.fillStyle = this.colors.altBackgroundColor;
+  miniArcade.gameCtx.fillRect(0, 0, miniArcade.gameCanvas.width, miniArcade.gameCanvas.height);
+  miniArcade.gameCtx.textAlign = 'center';
+  miniArcade.gameCtx.font = miniArcade.menuFontLarge;
+  miniArcade.gameCtx.fillStyle = this.colors.altTextColor;
+  miniArcade.gameCtx.fillText('HIGH', miniArcade.gameCanvas.width / 2, 100);
+  miniArcade.gameCtx.fillText('SCORE', miniArcade.gameCanvas.width / 2, 180);
+  miniArcade.gameCtx.font = miniArcade.menuFontSmall;
+  miniArcade.gameCtx.fillText('ENTER INITIALS', miniArcade.gameCanvas.width / 2, 250);
+  miniArcade.gameCtx.font = miniArcade.menuFontLarge;
+  miniArcade.gameCtx.fillText(this.initials, miniArcade.gameCanvas.width / 2, 390);
+}
+Game.prototype.drawHightScoreList = function () {
+  miniArcade.gameCtx.fillStyle = this.colors.altBackgroundColor;
+  miniArcade.gameCtx.fillRect(0, 0, miniArcade.gameCanvas.width, miniArcade.gameCanvas.height);
+  miniArcade.gameCtx.textAlign = 'center';
+  miniArcade.gameCtx.font = miniArcade.menuFontLarge;
+  miniArcade.gameCtx.fillStyle = this.colors.altTextColor;
+  miniArcade.gameCtx.fillText('HIGH', miniArcade.gameCanvas.width / 2, 100);
+  miniArcade.gameCtx.fillText('SCORE', miniArcade.gameCanvas.width / 2, 180);
+  miniArcade.gameCtx.font = miniArcade.menuFontSmall;
+  for (let i = 0; i < HighScore.all.length; i++) {
+    miniArcade.gameCtx.fillText(HighScore.all[i].initial.toUpperCase(), miniArcade.gameCanvas.width / 4, 240 + i * 45);
+    miniArcade.gameCtx.fillText(HighScore.all[i].score, miniArcade.gameCanvas.width * 0.75, 240 + i * 45);
+  }
+}
+Game.prototype.drawNoHighScore = function () {
+  miniArcade.gameCtx.fillStyle = this.colors.altBackgroundColor;
+  miniArcade.gameCtx.fillRect(0, 0, miniArcade.gameCanvas.width, miniArcade.gameCanvas.height);
+  miniArcade.gameCtx.textAlign = 'center';
+  miniArcade.gameCtx.font = miniArcade.menuFontLarge;
+  miniArcade.gameCtx.fillStyle = this.colors.altTextColor;
+  miniArcade.gameCtx.fillText('Game', miniArcade.gameCanvas.width / 2, 100);
+  miniArcade.gameCtx.fillText('Over', miniArcade.gameCanvas.width / 2, 180);
+  miniArcade.gameCtx.font = miniArcade.menuFontSmall;
+  miniArcade.gameCtx.fillText('SPACEBAR TO CONTINUE', miniArcade.gameCanvas.width / 2, 350);
 }
 
 // Game Object constructor for all on sreen game objects
@@ -56,8 +137,13 @@ function GameObject(context, x, y, vx, vy) {
   this.collision = false;
 }
 
+function handleKeyUp() {
+  miniArcade.joystickCtx.clearRect(0, 0, miniArcade.joystickCanvas.width, miniArcade.joystickCanvas.height);
+  miniArcade.joystickCtx.drawImage(normalImg, 0, 0);
+}
+
 // Logic to control global keypresses for switching states
-function handleKeyPress(event) {
+function handleKeyDown(event) {
   let key = event.key;
   drawJoystick(key);
   // stops browser scroll
@@ -68,33 +154,36 @@ function handleKeyPress(event) {
     key === keyPresses.SPACE_BAR) {
     event.preventDefault();
   }
-  switch (state) {
+  switch (miniArcade.state) {
     case gameStates.MENU:
-      if (key === '1') state = gameStates.DIRECTIONS;
+      if (key === '1') {
+        miniArcade.state = gameStates.DIRECTIONS;
+        miniArcade.activeGame = snakeGame;
+      }
       break;
     case gameStates.DIRECTIONS:
       if (key === keyPresses.SPACE_BAR) {
-        snakeGame.setData();
-        snakeGame.newGame();
-        state = gameStates.SNAKE;
+        miniArcade.activeGame.setData();
+        miniArcade.activeGame.newGame();
+        miniArcade.state = gameStates.GAME;
       } else if (key === keyPresses.ESCAPE) {
-        state = keyPresses.MENU;
+        miniArcade.state = keyPresses.MENU;
       }
       break;
     case gameStates.PAUSED:
       if (key === keyPresses.ESCAPE) {
-        state = gameStates.MENU;
+        miniArcade.state = gameStates.MENU;
       } else if (key === keyPresses.P || key === keyPresses.SPACE_BAR) {
-        state = gameStates.SNAKE;
+        miniArcade.state = gameStates.GAME;
       }
       break;
-    case gameStates.SNAKE:
+    case gameStates.GAME:
       if (key === keyPresses.P || key === keyPresses.ESCAPE) {
-        state = gameStates.PAUSED;
+        miniArcade.state = gameStates.PAUSED;
       } else {
         // limits the keys that can be the snakeGame.activeKey
-        for (let i = 0; i < snakeGame.allowedKeys.length; i++) {
-          if (key === snakeGame.allowedKeys[i]) {
+        for (let i = 0; i < snakeGame.validKeys.length; i++) {
+          if (key === snakeGame.validKeys[i]) {
             snakeGame.activeKey = key;
           }
         }
@@ -107,18 +196,18 @@ function handleKeyPress(event) {
       } else {
         if (key === keyPresses.ENTER || key === keyPresses.ESCAPE || key === keyPresses.SPACE_BAR) {
           setNewHighScore(snakeGame.initials, snakeGame.score);
-          state = gameStates.SHOW_HIGH_SCORE;
+          miniArcade.state = gameStates.SHOW_HIGH_SCORE;
         }
       }
       break;
     case gameStates.SHOW_HIGH_SCORE:
       if (key === keyPresses.ENTER || key === keyPresses.ESCAPE || key === keyPresses.SPACE_BAR) {
-        state = gameStates.MENU;
+        miniArcade.state = gameStates.MENU;
       }
       break;
     case gameStates.NO_HIGH_SCORE:
-      if (key === keyPresses.SPACE_BAR) state = gameStates.DIRECTIONS;
-      if (key === keyPresses.ESCAPE) state = gameStates.MENU;
+      if (key === keyPresses.SPACE_BAR) miniArcade.state = gameStates.DIRECTIONS;
+      if (key === keyPresses.ESCAPE) miniArcade.state = gameStates.MENU;
       break;
     default:
       break;
@@ -129,34 +218,34 @@ function handleKeyPress(event) {
 // this function is called inside the global handleKeyPress
 // and takes a tolowercase(ed) event.key as a parameter
 function drawJoystick(key) {
-  joystickCtx.clearRect(0, 0, joystickCanvas.width, joystickCanvas.height);
+  miniArcade.joystickCtx.clearRect(0, 0, miniArcade.joystickCanvas.width, miniArcade.joystickCanvas.height);
   switch (key) {
     case keyPresses.ARROW_UP:
-      joystickCtx.drawImage(upImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(upImg, 0, 0);
       break;
     case keyPresses.ARROW_DOWN:
-      joystickCtx.drawImage(downImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(downImg, 0, 0);
       break;
     case keyPresses.ARROW_LEFT:
-      joystickCtx.drawImage(leftImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(leftImg, 0, 0);
       break;
     case keyPresses.ARROW_RIGHT:
-      joystickCtx.drawImage(rightImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(rightImg, 0, 0);
       break;
     case keyPresses.W:
-      joystickCtx.drawImage(upImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(upImg, 0, 0);
       break;
     case keyPresses.S:
-      joystickCtx.drawImage(downImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(downImg, 0, 0);
       break;
     case keyPresses.A:
-      joystickCtx.drawImage(leftImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(leftImg, 0, 0);
       break;
     case keyPresses.D:
-      joystickCtx.drawImage(rightImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(rightImg, 0, 0);
       break;
     default:
-      joystickCtx.drawImage(normalImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(normalImg, 0, 0);
       break;
   }
 }
@@ -168,88 +257,6 @@ function isValidLetter(letter) {
     return true;
   }
   return false;
-}
-
-// Drawing functions for static text on background color screens
-function drawMainMenu() {
-  canvas.width = 600;
-  canvas.height = 440;
-  ctx.fillStyle = '#30f0af';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px kenney-thick';
-  ctx.fillStyle = '#187856';
-  ctx.fillText('Mini', 175, 100);
-  ctx.fillText('Arcade', 100, 180);
-  ctx.font = '70px kenney';
-  ctx.fillText('PRESS 1 FOR SNAKE', 110, 300);
-  ctx.fillText('PRESS 2 COMING SOON', 80, 350);
-}
-
-function drawSnakeDirections() {
-  canvas.width = 600;
-  canvas.height = 440;
-  ctx.fillStyle = snakeGame.textColor;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px kenney-thick';
-  ctx.fillStyle = '#99932e';
-  ctx.fillText('Snake', 125, 100);
-  ctx.font = '70px kenney';
-  ctx.fillText('MOVE WITH WASD OR ARROWS', 10, 300);
-  ctx.fillText('SPACEBAR TO CONTINUE', 60, 350);
-}
-
-function drawPauseMenu() {
-  canvas.width = 600;
-  canvas.height = 440;
-  ctx.fillStyle = '#22210f';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px kenney-thick';
-  ctx.fillStyle = snakeGame.textColor;
-  ctx.fillText('PAUSED', 90, 100);
-  ctx.font = '70px kenney';
-  ctx.fillText('SPACEBAR TO CONTINUE', 60, 300);
-  ctx.fillText('ESC TO QUIT', 165, 350);
-}
-function drawYesHighScore() {
-  canvas.width = 600;
-  canvas.height = 440;
-  ctx.fillStyle = '#22210f';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px kenney-thick';
-  ctx.fillStyle = snakeGame.textColor;
-  ctx.fillText('HIGH', 160, 100);
-  ctx.fillText('SCORE', 115, 180);
-  ctx.font = '70px kenney';
-  ctx.fillText('ENTER INITIALS', 145, 250);
-  ctx.font = 'bold 105px kenney-thick';
-  ctx.fillText(snakeGame.initials, 145, 390);
-}
-function drawHightScoreList() {
-  canvas.width = 600;
-  canvas.height = 440;
-  ctx.fillStyle = '#22210f';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px kenney-thick';
-  ctx.fillStyle = snakeGame.textColor;
-  ctx.fillText('HIGH', 160, 100);
-  ctx.fillText('SCORE', 115, 180);
-  ctx.font = '70px kenney';
-  for (let i = 0; i < HighScore.all.length; i++) {
-    ctx.fillText(HighScore.all[i].initial.toUpperCase(), 110, 240 + i * 45);
-    ctx.fillText(HighScore.all[i].score, 365, 240 + i * 45);
-  }
-}
-function drawNoHighScore() {
-  canvas.width = 600;
-  canvas.height = 440;
-  ctx.fillStyle = '#22210f';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = 'bold 70px kenney-thick';
-  ctx.fillStyle = snakeGame.textColor;
-  ctx.fillText('Game', 165, 100);
-  ctx.fillText('Over', 165, 180);
-  ctx.font = '70px kenney';
-  ctx.fillText('SPACEBAR TO CONTINUE', 60, 350);
 }
 
 // Lil helper functions for getting even/odd
@@ -291,38 +298,38 @@ function setNewHighScore(newInitial, newScore) {
 // This is the main loop of the with a switch on states
 // controlled by keyboard events in handleKeyPress()
 function appLoop(timestamp) {
-  if (!previousTimeStamp) {
-    previousTimeStamp = timestamp;
+  if (!miniArcade.previousTimeStamp) {
+    miniArcade.previousTimeStamp = timestamp;
   }
   // Draws the initial joystick normal view hopefully at least once before we get keyboard input
-  if (previousTimeStamp > 0 && previousTimeStamp < 500) {
-    joystickCtx.drawImage(normalImg, 0, 0);
+  if (miniArcade.previousTimeStamp > 0 && miniArcade.previousTimeStamp < 500) {
+    miniArcade.joystickCtx.drawImage(normalImg, 0, 0);
   }
 
-  previousTimeStamp = timestamp;
+  miniArcade.previousTimeStamp = timestamp;
 
-  switch (state) {
-    case 'menu':
-      drawMainMenu();
+  switch (miniArcade.state) {
+    case gameStates.MENU:
+      miniArcade.drawMainMenu();
       window.requestAnimationFrame(appLoop);
       break;
-    case 'snake':
+    case gameStates.DIRECTIONS:
+      miniArcade.activeGame.drawDirections();
+      window.requestAnimationFrame(appLoop);
+      break;
+    case gameStates.GAME:
       setTimeout(function () {
-        snakeGame.gameLoop();
+        miniArcade.activeGame.gameLoop();
         requestAnimationFrame(appLoop);
-      }, 1000 / 5);
+      }, miniArcade.activeGame.timeout);
       break;
-    case 'directions':
-      drawSnakeDirections();
+    case gameStates.PAUSED:
+      miniArcade.activeGame.drawPauseMenu();
       window.requestAnimationFrame(appLoop);
       break;
-    case 'paused':
-      drawPauseMenu();
-      window.requestAnimationFrame(appLoop);
-      break;
-    case 'gameOver':
-      if (isNewHighScore(snakeGame.score)) {
-        state = 'highScore';
+    case gameStates.GAME_OVER:
+      if (isNewHighScore(miniArcade.activeGame.score)) {
+        miniArcade.state = gameStates.HIGH_SCORE;
         let sound = new Audio('./audio/new-highscore.ogg');
         sound.volume = 0.30;
         // Adds a delay to the highScore so it doesn't play over the death sound.
@@ -331,20 +338,20 @@ function appLoop(timestamp) {
         }, 1000);
         window.requestAnimationFrame(appLoop);
       } else {
-        state = 'noHighScore';
+        miniArcade.state = gameStates.NO_HIGH_SCORE;
         window.requestAnimationFrame(appLoop);
       }
       break;
-    case 'highScore':
-      drawYesHighScore();
+    case gameStates.HIGH_SCORE:
+      miniArcade.activeGame.drawYesHighScore();
       window.requestAnimationFrame(appLoop);
       break;
-    case 'noHighScore':
-      drawNoHighScore();
+    case gameStates.NO_HIGH_SCORE:
+      miniArcade.activeGame.drawNoHighScore();
       window.requestAnimationFrame(appLoop);
       break;
-    case 'showHighScore':
-      drawHightScoreList();
+    case gameStates.SHOW_HIGH_SCORE:
+      miniArcade.activeGame.drawHightScoreList();
       window.requestAnimationFrame(appLoop);
       break;
     default:
@@ -356,3 +363,15 @@ function appLoop(timestamp) {
 // This is the entry point into the game loop
 normalImg.onload = window.requestAnimationFrame(appLoop);
 
+const snakeGame = new Game(
+  'snake',
+  'WASD OR ARROWS TO MOVE',
+  {
+    textColor: '#99932e',
+    backgroundColor: '#fff64d',
+    altBackgroundColor: '#22210f',
+    altTextColor: '#fff64d',
+  },
+  ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'],
+  1000 / 5,
+);

@@ -2,38 +2,30 @@
 snakeGame.gameLoop = function () {
   updateAll();
   checkAllCollisions();
-  snakeGame.context.clearRect(0, 0, snakeGame.canvas.width, snakeGame.canvas.height);
   drawAll();
 }
 
 // Loads in all the default snakeGame data
 snakeGame.setData = function () {
-  snakeGame.allSegments = [];
-  snakeGame.squareSize = 40;
-  snakeGame.snakeSegmentSize = 36;
-  snakeGame.numRows = 11;
-  snakeGame.numColumns = 15;
-  snakeGame.canvas.width = 600;
-  snakeGame.canvas.height = 450;
-  snakeGame.timeout = 1000 / 6;
-  snakeGame.activeKey = '';
-  snakeGame.allowedKeys = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
-  snakeGame.allFood = [];
-  snakeGame.score = 0;
-  snakeGame.initials = '';
-  snakeGame.segmentColor = 'linear-gradient(#74f330, #000000)';
-  snakeGame.foodColor = 'red';
-  snakeGame.scoreDisplayBuffer = 0;
-  snakeGame.muted = false;
+  this.allSegments = [];
+  this.squareSize = 40;
+  this.snakeSegmentSize = 36;
+  this.numRows = 11;
+  this.numColumns = 15;
+  this.activeKey = '';
+  this.allFood = [];
+  this.segmentColor = 'linear-gradient(#74f330, #000000)';
+  this.foodColor = 'red';
+  this.scoreDisplayBuffer = 0;
 };
 
 // Sets the starting position of the initial snake segments and food.
 snakeGame.newGame = function () {
   snakeGame.allSegments = [];
-  new SnakeSegment(ctx, snakeGame.squareSize * 4, snakeGame.squareSize * 6, 1, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
-  new SnakeSegment(ctx, snakeGame.squareSize * 3, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
-  new SnakeSegment(ctx, snakeGame.squareSize * 2, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
-  new SnakeFood(ctx, 100, 100, 0, 0, 25, 25, 'red');
+  new SnakeSegment(miniArcade.gameCtx, snakeGame.squareSize * 4, snakeGame.squareSize * 6, 1, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeSegment(miniArcade.gameCtx, snakeGame.squareSize * 3, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeSegment(miniArcade.gameCtx, snakeGame.squareSize * 2, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeFood(miniArcade.gameCtx, 100, 100, 0, 0, 25, 25, 'red');
   snakeGame.state = 'snake';
 };
 
@@ -67,7 +59,7 @@ SnakeSegment.prototype.add = function () {
 // Draws each SnakeSegment to screen using a gradient the size of the canvas.
 SnakeSegment.prototype.draw = function () {
   // How a snake segment is shown on the screen
-  let grd = snakeGame.context.createLinearGradient(0, 0, 600, 0);
+  let grd = miniArcade.gameCtx.createLinearGradient(0, 0, 600, 0);
   grd.addColorStop(.0, '#f33074');
   grd.addColorStop(.33, '#fff64d');
   grd.addColorStop(.66, '#30f0af');
@@ -189,14 +181,14 @@ function drawGameBoard() {
   for (let rows = 0; rows < snakeGame.numRows; rows++) {
     for (let columns = 0; columns < snakeGame.numColumns; columns++) {
       if ((isOdd(rows) && isEven(columns)) || ((isEven(rows) && isOdd(columns)))) {
-        ctx.fillStyle = '#fddde8';
-        //ctx.fillStyle = '#4168AB';
+        miniArcade.gameCtx.fillStyle = '#fddde8';
+        //miniArcade.gameCtx.fillStyle = '#4168AB';
       } else {
-        ctx.fillStyle = '#fbbad1';
-        //ctx.fillStyle = '#3D4B75';
+        miniArcade.gameCtx.fillStyle = '#fbbad1';
+        //miniArcade.gameCtx.fillStyle = '#3D4B75';
       }
-      ctx.beginPath();
-      ctx.fillRect(columns * 40, rows * 40, 40, 40);
+      miniArcade.gameCtx.beginPath();
+      miniArcade.gameCtx.fillRect(columns * 40, rows * 40, 40, 40);
     }
   }
 }
@@ -222,8 +214,8 @@ function checkSegmentCollision() {
 
   // Collision with edge of game board
   let head = snakeGame.allSegments[0];
-  if (head.x < 0 || head.x + snakeGame.squareSize > snakeGame.canvas.width || head.y < 0 || head.y + snakeGame.squareSize > snakeGame.canvas.height) {
-    state = 'gameOver';
+  if (head.x < 0 || head.x + snakeGame.squareSize > miniArcade.gameCanvas.width || head.y < 0 || head.y + snakeGame.squareSize > miniArcade.gameCanvas.height) {
+    miniArcade.state = gameStates.GAME_OVER;
     let sound = new Audio('./audio/death.wav');
     sound.volume = 0.5;
     sound.play();
@@ -239,7 +231,7 @@ function checkSegmentCollision() {
       if (rectIntersect(segmentA.x, segmentA.y, segmentA.width, segmentA.height, segmentB.x, segmentB.y, segmentB.width, segmentB.height)) {
         segmentA.collision = true;
         segmentB.collision = true;
-        state = 'gameOver';
+        miniArcade.state = gameStates.GAME_OVER;
         let sound = new Audio('./audio/death.wav');
         sound.volume = 0.5;
         sound.play();
@@ -293,6 +285,7 @@ function updateAll() {
 // This function holds all the calls to drawing the background, the snake segments,
 // the score and food.
 function drawAll() {
+  miniArcade.gameCtx.clearRect(0, 0, miniArcade.gameCanvas.width, miniArcade.gameCanvas.height);
   drawGameBoard();
   for (let i = 0; i < snakeGame.allSegments.length; i++) {
     snakeGame.allSegments[i].draw();

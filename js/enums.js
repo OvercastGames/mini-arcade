@@ -1,8 +1,8 @@
 const gameStates = {
   MENU: 'menu',
-  SNAKE: 'snake',
-  DIRECTIONS: 'directions',
-  SNAKE: 'snake',
+  GAME: 'game',
+  DIRECTIONS: 'snakeDirections',
+  GAME_OVER: 'gameOver',
   PAUSED: 'paused',
   HIGH_SCORE: 'highScore',
   NO_HIGH_SCORE: 'noHighScore',
@@ -10,7 +10,7 @@ const gameStates = {
 }
 
 const keyPresses = {
-  ARROW_UP: 'Arrowup',
+  ARROW_UP: 'ArrowUp',
   ARROW_DOWN: 'ArrowDown',
   ARROW_LEFT: 'ArrowLeft',
   ARROW_RIGHT: 'ArrowRight',
