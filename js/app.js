@@ -36,33 +36,43 @@ function App() {
   };
 }
 
-const miniArcade = new App();
-
 // Set up all the global joystick images
+App.prototype.loadJoystick = function () {
+  this.joystickImages = {
+    upImg: new Image(),
+    downImg: new Image(),
+    leftImg: new Image(),
+    rightImg: new Image(),
+    normalImg: new Image(),
+  }
+  this.joystickImages.upImg.src = './img/joystickup.png';
+  this.joystickImages.downImg.src = './img/joystickdown.png';
+  this.joystickImages.leftImg.src = './img/joystickleft.png';
+  this.joystickImages.rightImg.src = './img/joystickright.png';
+  this.joystickImages.normalImg.src = './img/joysticknormal.png';
+}
 
-let upImg = new Image();
-upImg.src = './img/joystickup.png';
-let downImg = new Image();
-downImg.src = './img/joystickdown.png';
-let leftImg = new Image();
-leftImg.src = './img/joystickleft.png';
-let rightImg = new Image();
-rightImg.src = './img/joystickright.png';
-let normalImg = new Image();
-normalImg.src = './img/joysticknormal.png';
-miniArcade.joystickCtx.drawImage(normalImg, miniArcade.joystickCanvas.width, miniArcade.joystickCanvas.height);
-
-
-
-function Game(title, directions, colors, validKeys, timeout) {
+// Game contructor
+function Game(title, directions, colors, timeout) {
   this.title = title;
   this.directions = directions;
   this.colors = colors;
-  this.validKeys = validKeys;
   this.timeout = timeout;
   this.score = 0;
   this.initials = '';
-}
+  this.setData = function () {};
+  this.newGame = function () {};
+  this.receiveKeyDown = function () {};
+  this.receiveKeyUp = function () {};
+  this.updateAll = function () {};
+  this.checkAllCollisions = function () {};
+  this.drawAll = function () {};
+  this.gameLoop = function () {
+    this.updateAll();
+    this.checkAllCollisions();
+    this.drawAll();
+  }
+};
 
 Game.prototype.drawDirections = function () {
   miniArcade.gameCtx.fillStyle = this.colors.backgroundColor;
@@ -100,6 +110,17 @@ Game.prototype.drawYesHighScore = function () {
   miniArcade.gameCtx.font = miniArcade.menuFontLarge;
   miniArcade.gameCtx.fillText(this.initials, miniArcade.gameCanvas.width / 2, 390);
 }
+Game.prototype.drawNoHighScore = function () {
+  miniArcade.gameCtx.fillStyle = this.colors.altBackgroundColor;
+  miniArcade.gameCtx.fillRect(0, 0, miniArcade.gameCanvas.width, miniArcade.gameCanvas.height);
+  miniArcade.gameCtx.textAlign = 'center';
+  miniArcade.gameCtx.font = miniArcade.menuFontLarge;
+  miniArcade.gameCtx.fillStyle = this.colors.altTextColor;
+  miniArcade.gameCtx.fillText('Game', miniArcade.gameCanvas.width / 2, 100);
+  miniArcade.gameCtx.fillText('Over', miniArcade.gameCanvas.width / 2, 180);
+  miniArcade.gameCtx.font = miniArcade.menuFontSmall;
+  miniArcade.gameCtx.fillText('SPACEBAR TO CONTINUE', miniArcade.gameCanvas.width / 2, 350);
+}
 Game.prototype.drawHightScoreList = function () {
   miniArcade.gameCtx.fillStyle = this.colors.altBackgroundColor;
   miniArcade.gameCtx.fillRect(0, 0, miniArcade.gameCanvas.width, miniArcade.gameCanvas.height);
@@ -113,17 +134,6 @@ Game.prototype.drawHightScoreList = function () {
     miniArcade.gameCtx.fillText(HighScore.all[i].initial.toUpperCase(), miniArcade.gameCanvas.width / 4, 240 + i * 45);
     miniArcade.gameCtx.fillText(HighScore.all[i].score, miniArcade.gameCanvas.width * 0.75, 240 + i * 45);
   }
-}
-Game.prototype.drawNoHighScore = function () {
-  miniArcade.gameCtx.fillStyle = this.colors.altBackgroundColor;
-  miniArcade.gameCtx.fillRect(0, 0, miniArcade.gameCanvas.width, miniArcade.gameCanvas.height);
-  miniArcade.gameCtx.textAlign = 'center';
-  miniArcade.gameCtx.font = miniArcade.menuFontLarge;
-  miniArcade.gameCtx.fillStyle = this.colors.altTextColor;
-  miniArcade.gameCtx.fillText('Game', miniArcade.gameCanvas.width / 2, 100);
-  miniArcade.gameCtx.fillText('Over', miniArcade.gameCanvas.width / 2, 180);
-  miniArcade.gameCtx.font = miniArcade.menuFontSmall;
-  miniArcade.gameCtx.fillText('SPACEBAR TO CONTINUE', miniArcade.gameCanvas.width / 2, 350);
 }
 
 // Game Object constructor for all on sreen game objects
@@ -139,7 +149,7 @@ function GameObject(context, x, y, vx, vy) {
 
 function handleKeyUp() {
   miniArcade.joystickCtx.clearRect(0, 0, miniArcade.joystickCanvas.width, miniArcade.joystickCanvas.height);
-  miniArcade.joystickCtx.drawImage(normalImg, 0, 0);
+  miniArcade.joystickCtx.drawImage(miniArcade.joystickImages.normalImg, 0, 0);
 }
 
 // Logic to control global keypresses for switching states
@@ -159,6 +169,9 @@ function handleKeyDown(event) {
       if (key === '1') {
         miniArcade.state = gameStates.DIRECTIONS;
         miniArcade.activeGame = snakeGame;
+      } else if (key === '2') {
+        miniArcade.state = gameStates.DIRECTIONS;
+        miniArcade.activeGame = breakoutGame;
       }
       break;
     case gameStates.DIRECTIONS:
@@ -181,21 +194,16 @@ function handleKeyDown(event) {
       if (key === keyPresses.P || key === keyPresses.ESCAPE) {
         miniArcade.state = gameStates.PAUSED;
       } else {
-        // limits the keys that can be the snakeGame.activeKey
-        for (let i = 0; i < snakeGame.validKeys.length; i++) {
-          if (key === snakeGame.validKeys[i]) {
-            snakeGame.activeKey = key;
-          }
-        }
+        miniArcade.activeGame.receiveKeyDown(key);
       }
       break;
     // a little extra logic here for initials
     case gameStates.HIGH_SCORE:
-      if (snakeGame.initials.length < 3 && isValidLetter(key)) {
-        snakeGame.initials += key.toUpperCase();
+      if (miniArcade.activeGame.initials.length < 3 && isValidLetter(key)) {
+        miniArcade.activeGame.initials += key.toUpperCase();
       } else {
         if (key === keyPresses.ENTER || key === keyPresses.ESCAPE || key === keyPresses.SPACE_BAR) {
-          setNewHighScore(snakeGame.initials, snakeGame.score);
+          setNewHighScore(miniArcade.activeGame.initials, miniArcade.activeGame.score);
           miniArcade.state = gameStates.SHOW_HIGH_SCORE;
         }
       }
@@ -221,31 +229,31 @@ function drawJoystick(key) {
   miniArcade.joystickCtx.clearRect(0, 0, miniArcade.joystickCanvas.width, miniArcade.joystickCanvas.height);
   switch (key) {
     case keyPresses.ARROW_UP:
-      miniArcade.joystickCtx.drawImage(upImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(miniArcade.joystickImages.upImg, 0, 0);
       break;
     case keyPresses.ARROW_DOWN:
-      miniArcade.joystickCtx.drawImage(downImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(miniArcade.joystickImages.downImg, 0, 0);
       break;
     case keyPresses.ARROW_LEFT:
-      miniArcade.joystickCtx.drawImage(leftImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(miniArcade.joystickImages.leftImg, 0, 0);
       break;
     case keyPresses.ARROW_RIGHT:
-      miniArcade.joystickCtx.drawImage(rightImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(miniArcade.joystickImages.rightImg, 0, 0);
       break;
     case keyPresses.W:
-      miniArcade.joystickCtx.drawImage(upImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(miniArcade.joystickImages.upImg, 0, 0);
       break;
     case keyPresses.S:
-      miniArcade.joystickCtx.drawImage(downImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(miniArcade.joystickImages.downImg, 0, 0);
       break;
     case keyPresses.A:
-      miniArcade.joystickCtx.drawImage(leftImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(miniArcade.joystickImages.leftImg, 0, 0);
       break;
     case keyPresses.D:
-      miniArcade.joystickCtx.drawImage(rightImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(miniArcade.joystickImages.rightImg, 0, 0);
       break;
     default:
-      miniArcade.joystickCtx.drawImage(normalImg, 0, 0);
+      miniArcade.joystickCtx.drawImage(miniArcade.joystickImages.normalImg, 0, 0);
       break;
   }
 }
@@ -271,6 +279,14 @@ function isEven(num) {
     return true;
   }
   return false;
+}
+
+// Collision detection logic taken from tutorial AT https://spicyyoghurt.com/tutorials/html5-javascript-game-development/collision-detection-physics
+function rectIntersect(ax, ay, aWidth, aHeight, bx, by, bWidth, bHeight) {
+  if (bx > aWidth + ax || ax > bWidth + bx || by > aHeight + ay || ay > bHeight + by) {
+    return false;
+  }
+  return true;
 }
 
 // Returns true if points is higher than any of the entries in HighScore.all
@@ -303,7 +319,7 @@ function appLoop(timestamp) {
   }
   // Draws the initial joystick normal view hopefully at least once before we get keyboard input
   if (miniArcade.previousTimeStamp > 0 && miniArcade.previousTimeStamp < 500) {
-    miniArcade.joystickCtx.drawImage(normalImg, 0, 0);
+    miniArcade.joystickCtx.drawImage(miniArcade.joystickImages.normalImg, 0, 0);
   }
 
   miniArcade.previousTimeStamp = timestamp;
@@ -359,10 +375,15 @@ function appLoop(timestamp) {
   }
 }
 
+// Create App and load joystick
+const miniArcade = new App();
+miniArcade.loadJoystick();
+
 // Starts appLoop as soon as the joystick image is loaded.
 // This is the entry point into the game loop
-normalImg.onload = window.requestAnimationFrame(appLoop);
+miniArcade.joystickImages.normalImg.onload = window.requestAnimationFrame(appLoop);
 
+// Instantiate Games
 const snakeGame = new Game(
   'snake',
   'WASD OR ARROWS TO MOVE',
@@ -372,6 +393,17 @@ const snakeGame = new Game(
     altBackgroundColor: '#22210f',
     altTextColor: '#fff64d',
   },
-  ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'],
-  1000 / 5,
+  1000 / 4,
+);
+
+const breakoutGame = new Game(
+  'breakout',
+  'AD OR ARROWS TO MOVE',
+  {
+    textColor: '#99932e',
+    backgroundColor: '#fff64d',
+    altBackgroundColor: '#22210f',
+    altTextColor: '#fff64d',
+  },
+  0,
 );

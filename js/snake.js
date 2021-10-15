@@ -1,33 +1,4 @@
-// The snakeGame game loop that gets called from appLoop when the state is 'snake'
-snakeGame.gameLoop = function () {
-  updateAll();
-  checkAllCollisions();
-  drawAll();
-}
 
-// Loads in all the default snakeGame data
-snakeGame.setData = function () {
-  this.allSegments = [];
-  this.squareSize = 40;
-  this.snakeSegmentSize = 36;
-  this.numRows = 11;
-  this.numColumns = 15;
-  this.activeKey = '';
-  this.allFood = [];
-  this.segmentColor = 'linear-gradient(#74f330, #000000)';
-  this.foodColor = 'red';
-  this.scoreDisplayBuffer = 0;
-};
-
-// Sets the starting position of the initial snake segments and food.
-snakeGame.newGame = function () {
-  snakeGame.allSegments = [];
-  new SnakeSegment(miniArcade.gameCtx, snakeGame.squareSize * 4, snakeGame.squareSize * 6, 1, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
-  new SnakeSegment(miniArcade.gameCtx, snakeGame.squareSize * 3, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
-  new SnakeSegment(miniArcade.gameCtx, snakeGame.squareSize * 2, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
-  new SnakeFood(miniArcade.gameCtx, 100, 100, 0, 0, 25, 25, 'red');
-  snakeGame.state = 'snake';
-};
 
 // SnakeSegment constructor function
 function SnakeSegment(context, x, y, vx, vy, height, width, color) {
@@ -73,7 +44,6 @@ SnakeSegment.prototype.draw = function () {
   this.context.fillRect(this.x + padding, this.y + padding, this.height, this.width);
 
 };
-
 
 // This prototype function is only used on the "head" of the snake.
 // The activeKey controls the new vx/vy. There is also logic to 
@@ -138,6 +108,10 @@ SnakeFood.prototype.draw = function () {
 SnakeFood.prototype.update = function () {
   if (this.collision) {
     snakeGame.score += 100;
+    // Speeds up the action every 500 points
+    if (snakeGame.score % 500 === 0) {
+      snakeGame.timeout *= 0.9;
+    }
     // Grow the tail
     snakeGame.allSegments[snakeGame.allSegments.length - 1].add();
     this.findSafeLocation();
@@ -153,33 +127,74 @@ SnakeFood.prototype.findSafeLocation = function () {
   do {
     randomX = Math.floor(Math.random() * snakeGame.numColumns) * snakeGame.squareSize;
     randomY = Math.floor(Math.random() * snakeGame.numRows) * snakeGame.squareSize;
-  } while (isOccupied(randomX * snakeGame.squareSize, randomY * snakeGame.squareSize));
+  } while (snakeGame.isOccupied(randomX * snakeGame.squareSize, randomY * snakeGame.squareSize));
   this.x = randomX;
   this.y = randomY;
 
 };
 
-// Draws the score to screen this is called in updateAll
-// with a buffer so it is only shown for a short time.
-function drawScoreToScreen() {
-  snakeGame.context.fillStyle = '#00000077';
-  snakeGame.context.font = 'bold 50px kenney-thick';
-  snakeGame.context.fillText(snakeGame.score, 20, 65);
+// The snakeGame game loop that gets called from appLoop when the state is 'snake'
+snakeGame.gameLoop = function () {
+  this.updateAll();
+  this.checkAllCollisions();
+  this.drawAll();
 }
 
-function isOccupied(x, y) {
-  for (let i = 0; i < snakeGame.allSegments.length; i++) {
-    let current = snakeGame.allSegments[i];
-    if (rectIntersect(current.x, current.y, current.width, current.height, x, y, snakeGame.squareSize, snakeGame.squareSize)) {
+// Loads in all the default snakeGame data
+snakeGame.setData = function () {
+  this.allSegments = [];
+  this.squareSize = 40;
+  this.snakeSegmentSize = 36;
+  this.numRows = 11;
+  this.numColumns = 15;
+  this.activeKey = '';
+  this.validKeys = ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'];
+  this.allFood = [];
+  this.segmentColor = 'linear-gradient(#74f330, #000000)';
+  this.foodColor = 'red';
+  this.scoreDisplayBuffer = 0;
+};
+
+// Sets the starting position of the initial snake segments and food.
+snakeGame.newGame = function () {
+  snakeGame.allSegments = [];
+  snakeGame.score = 0;
+  snakeGame.timeout = 1000 / 4;
+  new SnakeSegment(miniArcade.gameCtx, snakeGame.squareSize * 4, snakeGame.squareSize * 6, 1, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeSegment(miniArcade.gameCtx, snakeGame.squareSize * 3, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeSegment(miniArcade.gameCtx, snakeGame.squareSize * 2, snakeGame.squareSize * 6, 0, 0, snakeGame.snakeSegmentSize, snakeGame.snakeSegmentSize, 'green');
+  new SnakeFood(miniArcade.gameCtx, 100, 100, 0, 0, 25, 25, 'red');
+  snakeGame.state = 'snake';
+};
+
+snakeGame.receiveKeyDown = function (keyDown) {
+  for (let i = 0; i < this.validKeys.length; i++) {
+    if (keyDown === this.validKeys[i]) {
+      this.activeKey = keyDown;
+    }
+  }
+}
+// Draws the score to screen this is called in updateAll
+// with a buffer so it is only shown for a short time.
+snakeGame.drawScoreToScreen = function () {
+  miniArcade.gameCtx.fillStyle = '#00000077';
+  miniArcade.gameCtx.font = 'bold 50px kenney-thick';
+  miniArcade.gameCtx.fillText(this.score, miniArcade.gameCanvas.width / 2, 65);
+}
+
+snakeGame.isOccupied = function (x, y) {
+  for (let i = 0; i < this.allSegments.length; i++) {
+    let current = this.allSegments[i];
+    if (rectIntersect(current.x, current.y, current.width, current.height, x, y, this.squareSize, this.squareSize)) {
       return true;
     }
   }
   return false;
 }
 
-function drawGameBoard() {
-  for (let rows = 0; rows < snakeGame.numRows; rows++) {
-    for (let columns = 0; columns < snakeGame.numColumns; columns++) {
+snakeGame.drawGameBoard = function () {
+  for (let rows = 0; rows < this.numRows; rows++) {
+    for (let columns = 0; columns < this.numColumns; columns++) {
       if ((isOdd(rows) && isEven(columns)) || ((isEven(rows) && isOdd(columns)))) {
         miniArcade.gameCtx.fillStyle = '#fddde8';
         //miniArcade.gameCtx.fillStyle = '#4168AB';
@@ -193,41 +208,31 @@ function drawGameBoard() {
   }
 }
 
-// Collision detection logic taken from tutorial AT https://spicyyoghurt.com/tutorials/html5-javascript-game-development/collision-detection-physics
-function rectIntersect(ax, ay, aWidth, aHeight, bx, by, bWidth, bHeight) {
-  if (bx > aWidth + ax || ax > bWidth + bx || by > aHeight + ay || ay > bHeight + by) {
-    return false;
-  }
-  return true;
-}
-
-function checkFoodCollision() {
-  let head = snakeGame.allSegments[0];
-  let foodHead = snakeGame.allFood[0];
+snakeGame.checkFoodCollision = function () {
+  let head = this.allSegments[0];
+  let foodHead = this.allFood[0];
   if (rectIntersect(head.x, head.y, head.width, head.height, foodHead.x, foodHead.y, foodHead.width, foodHead.height)) {
     head.collision = true;
     foodHead.collision = true;
   }
 }
 
-function checkSegmentCollision() {
-
+snakeGame.checkSegmentCollision = function () {
   // Collision with edge of game board
-  let head = snakeGame.allSegments[0];
-  if (head.x < 0 || head.x + snakeGame.squareSize > miniArcade.gameCanvas.width || head.y < 0 || head.y + snakeGame.squareSize > miniArcade.gameCanvas.height) {
+  let head = this.allSegments[0];
+  if (head.x < 0 || head.x + this.squareSize > miniArcade.gameCanvas.width || head.y < 0 || head.y + this.squareSize > miniArcade.gameCanvas.height) {
     miniArcade.state = gameStates.GAME_OVER;
     let sound = new Audio('./audio/death.wav');
     sound.volume = 0.5;
     sound.play();
   }
-
   // Collision with self
   let segmentA;
   let segmentB;
-  for (let i = 0; i < snakeGame.allSegments.length; i++) {
-    segmentA = snakeGame.allSegments[i];
-    for (let j = i + 1; j < snakeGame.allSegments.length; j++) {
-      segmentB = snakeGame.allSegments[j];
+  for (let i = 0; i < this.allSegments.length; i++) {
+    segmentA = this.allSegments[i];
+    for (let j = i + 1; j < this.allSegments.length; j++) {
+      segmentB = this.allSegments[j];
       if (rectIntersect(segmentA.x, segmentA.y, segmentA.width, segmentA.height, segmentB.x, segmentB.y, segmentB.width, segmentB.height)) {
         segmentA.collision = true;
         segmentB.collision = true;
@@ -240,61 +245,58 @@ function checkSegmentCollision() {
   }
 }
 
-
-function checkAllCollisions() {
+snakeGame.checkAllCollisions = function () {
   // Reset all the snake segements and food to collision false
-  snakeGame.allFood[0].collision = false;
-  for (let i = 0; i < snakeGame.allSegments.length; i++) {
-    snakeGame.allSegments[i].collision = false;
+  this.allFood[0].collision = false;
+  for (let i = 0; i < this.allSegments.length; i++) {
+    this.allSegments[i].collision = false;
   }
-  checkFoodCollision();
-  checkSegmentCollision();
+  this.checkFoodCollision();
+  this.checkSegmentCollision();
 }
 
-
 // Adds a buffer to drawScoreToScreen() so it only stays up for 3 frames
-function updateScoreWithBuffer() {
-  snakeGame.scoreDisplayBuffer = 1;
-  drawScoreToScreen();
-  if (snakeGame.scoreDisplayBuffer > 0 && snakeGame.scoreDisplayBuffer < 4) {
-    drawScoreToScreen();
-    snakeGame.scoreDisplayBuffer++;
+snakeGame.drawScoreWithBuffer = function () {
+  if (this.allFood[0].collision) {
+    this.scoreDisplayBuffer = 1;
+  }
+  if (this.scoreDisplayBuffer > 0 && this.scoreDisplayBuffer < 10) {
+    this.drawScoreToScreen();
+    this.scoreDisplayBuffer++;
   } else {
-    snakeGame.scoreDisplayBuffer = 0;
+    this.scoreDisplayBuffer = 0;
   }
 }
 
 // Updates snake segments and food with new positions and velocities.
-function updateAll() {
+snakeGame.updateAll = function () {
   // Works backwards through allSegments assigning x/y/vx/vy from from the 
   // segment ahead of the current segment.
   // E.g. if we're on snakesegment.all[10] then it grabs new values from snakesegment.all[9]
-  for (let i = snakeGame.allSegments.length - 1; i > 0; i--) {
-    snakeGame.allSegments[i].x = snakeGame.allSegments[i - 1].x;
-    snakeGame.allSegments[i].y = snakeGame.allSegments[i - 1].y;
-    snakeGame.allSegments[i].vy = snakeGame.allSegments[i - 1].vy;
-    snakeGame.allSegments[i].vx = snakeGame.allSegments[i - 1].vx;
+  for (let i = this.allSegments.length - 1; i > 0; i--) {
+    this.allSegments[i].x = this.allSegments[i - 1].x;
+    this.allSegments[i].y = this.allSegments[i - 1].y;
+    this.allSegments[i].vy = this.allSegments[i - 1].vy;
+    this.allSegments[i].vx = this.allSegments[i - 1].vx;
   }
   // Currently the game only implements a single piece of food at a time.
   // This updates that first index.
-  snakeGame.allFood[0].update();
+  this.allFood[0].update();
   // Only update the head, the rest of the segments follow with above logic.
-  snakeGame.allSegments[0].update();
+  this.allSegments[0].update();
 }
 
 // This function holds all the calls to drawing the background, the snake segments,
 // the score and food.
-function drawAll() {
+snakeGame.drawAll = function () {
   miniArcade.gameCtx.clearRect(0, 0, miniArcade.gameCanvas.width, miniArcade.gameCanvas.height);
-  drawGameBoard();
-  for (let i = 0; i < snakeGame.allSegments.length; i++) {
-    snakeGame.allSegments[i].draw();
+  this.drawGameBoard();
+  for (let i = 0; i < this.allSegments.length; i++) {
+    this.allSegments[i].draw();
   }
   // Currently the game only implements a single piece of food at a time.
   // This updates that first index.
-  snakeGame.allFood[0].draw();
-  if (snakeGame.allFood.collision) {
-    updateScoreWithBuffer();
-  }
+  this.allFood[0].draw();
+  this.drawScoreWithBuffer();
 }
 
