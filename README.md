@@ -4,7 +4,7 @@
 
 ## About
 
-Mini Arcade is a tiny video game arcade experiance with retro fun. This project was designed to be expanded on and one of the goals of the code base was to be able to make it easy to add more games. The arcade machine currently features Snake with plans for more choices coming in the future. 
+Mini Arcade is a tiny video game arcade experience with retro fun. This project was designed to be expanded on and one of the goals of the code base was to be able to make it easy to add more games. The arcade machine currently features Snake with plans for more choices coming in the future. 
 
 OvercastGames is 
 - Justin Asuncion-Esmena
